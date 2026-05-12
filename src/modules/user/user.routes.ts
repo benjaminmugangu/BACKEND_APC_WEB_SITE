@@ -14,6 +14,7 @@ router.use(authMiddleware);
 router.use(authorize(UserRole.ADMIN));
 
 router.get('/', controller.findAll);
+router.post('/', controller.create);
 router.get('/:id', controller.findOne);
 router.put('/:id', validationMiddleware(UpdateUserAdminDto), controller.update);
 router.delete('/:id', controller.remove);

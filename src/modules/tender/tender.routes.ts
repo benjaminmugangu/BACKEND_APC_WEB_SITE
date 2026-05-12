@@ -146,6 +146,7 @@ router.delete('/:id', controller.remove);
  *       200:
  *         description: Statut mis à jour
  */
+router.patch('/bulk-status', controller.bulkSetStatus);
 router.patch('/:id/status', controller.setStatus);
 
 export default router;

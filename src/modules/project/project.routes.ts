@@ -121,6 +121,7 @@ router.delete('/:id', controller.remove);
 router.post('/:id/duplicate', controller.duplicate);
 router.patch('/bulk-status', controller.bulkSetStatus);
 router.patch('/:id/publish', controller.publish);
+router.patch('/:id/unpublish', controller.unpublish);
 router.patch('/:id/archive', controller.archive);
 
 /**

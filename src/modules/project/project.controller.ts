@@ -79,6 +79,15 @@ export class ProjectController {
     }
   };
 
+  unpublish = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await this.service.setStatus(req.params.id as string, 'draft' as any);
+      return ResponseUtil.success(res, 'Projet dépublié avec succès', result);
+    } catch (error) {
+      next(error);
+    }
+  };
+
   archive = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const result = await this.service.setStatus(req.params.id as string, 'archived' as any);

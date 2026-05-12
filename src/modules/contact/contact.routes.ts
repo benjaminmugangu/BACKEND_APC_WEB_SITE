@@ -135,7 +135,7 @@ router.patch('/:id/status', validationMiddleware(UpdateMessageStatusDto), contro
  *         description: Message marqué comme lu
  */
 router.patch('/:id/read', controller.markAsRead);
-
+router.post('/:id/reply', controller.reply);
 router.delete('/bulk', controller.bulkDelete);
 
 /**
