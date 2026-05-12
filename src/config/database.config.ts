@@ -21,7 +21,7 @@ export const AppDataSource = new DataSource({
   password: process.env.DB_PASSWORD || 'postgres',
   database: process.env.DB_NAME || 'apc_db',
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
-  synchronize: process.env.NODE_ENV === 'development',
+  synchronize: process.env.NODE_ENV === 'development' || process.env.DB_SYNCHRONIZE === 'true',
   logging: process.env.NODE_ENV === 'development',
   entities: [User, Message, News, Project, Service, Partner, TeamMember, Tender, Career, Settings],
   migrations: [],
