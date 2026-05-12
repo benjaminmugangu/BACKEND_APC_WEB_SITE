@@ -1,5 +1,15 @@
 import { DataSource } from 'typeorm';
 import dotenv from 'dotenv';
+import { User } from '../entities/user.entity';
+import { Message } from '../entities/message.entity';
+import { News } from '../entities/news.entity';
+import { Project } from '../entities/project.entity';
+import { Service } from '../entities/service.entity';
+import { Partner } from '../entities/partner.entity';
+import { TeamMember } from '../entities/team-member.entity';
+import { Tender } from '../entities/tender.entity';
+import { Career } from '../entities/career.entity';
+import { Settings } from '../entities/settings.entity';
 
 dotenv.config();
 
@@ -13,7 +23,7 @@ export const AppDataSource = new DataSource({
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
   synchronize: process.env.NODE_ENV === 'development',
   logging: process.env.NODE_ENV === 'development',
-  entities: [__filename.endsWith('.js') ? 'dist/**/*.entity.js' : 'src/**/*.entity.ts'],
-  migrations: [__filename.endsWith('.js') ? 'dist/migrations/**/*.js' : 'src/migrations/**/*.ts'],
-  subscribers: [__filename.endsWith('.js') ? 'dist/subscribers/**/*.js' : 'src/subscribers/**/*.ts'],
+  entities: [User, Message, News, Project, Service, Partner, TeamMember, Tender, Career, Settings],
+  migrations: [],
+  subscribers: [],
 });
