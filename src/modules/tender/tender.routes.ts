@@ -96,6 +96,29 @@ router.post('/', validationMiddleware(CreateTenderDto), controller.create);
  */
 router.put('/:id', validationMiddleware(UpdateTenderDto), controller.update);
 
+/**
+ * @swagger
+ * /api/v1/tenders/bulk:
+ *   delete:
+ *     summary: Supprimer plusieurs appels d'offres
+ *     tags: [Tenders]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               ids:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *     responses:
+ *       200:
+ *         description: Supprimés avec succès
+ */
 router.delete('/bulk', controller.bulkDelete);
 
 /**
@@ -145,6 +168,31 @@ router.delete('/:id', controller.remove);
  *     responses:
  *       200:
  *         description: Statut mis à jour
+ */
+/**
+ * @swagger
+ * /api/v1/tenders/bulk-status:
+ *   patch:
+ *     summary: Changer le statut de plusieurs appels d'offres
+ *     tags: [Tenders]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               ids:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               status:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Statuts mis à jour
  */
 router.patch('/bulk-status', controller.bulkSetStatus);
 router.patch('/:id/status', controller.setStatus);
