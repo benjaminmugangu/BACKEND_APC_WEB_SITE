@@ -86,8 +86,6 @@ router.get('/applications/all', applicationController.findAll);
  *   post:
  *     summary: Créer une nouvelle opportunité
  *     tags: [Careers]
-... (rest of the file remains the same)
-
  *     security:
  *       - bearerAuth: []
  *     requestBody:
