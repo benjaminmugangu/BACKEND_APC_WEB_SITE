@@ -45,6 +45,7 @@ router.get('/', controller.findAll);
  *         description: Détails du projet
  */
 router.get('/:id', controller.findOne);
+router.get('/slug/:slug', controller.findBySlug);
 
 // Routes administratives (Protégées)
 router.use(authMiddleware);
