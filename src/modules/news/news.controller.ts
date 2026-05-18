@@ -46,7 +46,8 @@ export class NewsController {
 
   findBySlug = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await this.service.findBySlug(req.params.slug as string);
+      const adminMode = (req as any).user?.role === 'ADMIN';
+      const result = await this.service.findBySlug(req.params.slug as string, adminMode);
       return ResponseUtil.success(res, 'Détails de l\'actualité récupérés par slug', result);
     } catch (error) {
       next(error);

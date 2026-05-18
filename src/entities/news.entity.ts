@@ -32,6 +32,9 @@ export enum NewsStatus {
  *           type: string
  *         author:
  *           type: string
+ *         authorId:
+ *           type: string
+ *           format: uuid
  *         readTime:
  *           type: number
  *         status:
@@ -39,9 +42,14 @@ export enum NewsStatus {
  *           enum: [draft, published, scheduled]
  *         featured:
  *           type: boolean
+ *         includeNewsletter:
+ *           type: boolean
  *         mainImage:
  *           type: string
  *         publishDate:
+ *           type: string
+ *           format: date-time
+ *         scheduledDate:
  *           type: string
  *           format: date-time
  *         createdAt:
