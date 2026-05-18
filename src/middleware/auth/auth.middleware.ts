@@ -33,3 +33,26 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
     return ResponseUtil.unauthorized(res, 'Token invalide ou expiré');
   }
 };
+
+export const optionalAuthMiddleware = (req: AuthRequest, res: Response, next: NextFunction) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return next();
+  }
+
+  const token = authHeader.split(' ')[1];
+
+  try {
+    const decoded = jwt.verify(token, jwtConfig.accessSecret) as any;
+    req.user = {
+      id: decoded.sub,
+      email: decoded.email,
+      role: decoded.role
+    };
+  } catch (error) {
+    // Ignorer l'erreur pour l'auth facultative sur les routes publiques, ne pas renvoyer de 401
+  }
+  next();
+};
+
