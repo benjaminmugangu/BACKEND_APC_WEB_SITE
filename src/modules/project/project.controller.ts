@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { ProjectService } from './project.service';
 import { ResponseUtil } from '@/common/utils/response.util';
+import { ProjectStatus } from '@/entities/project.entity';
 
 export class ProjectController {
   private service = new ProjectService();
@@ -17,16 +18,17 @@ export class ProjectController {
   findAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const page = parseInt(req.query.page as string) || 1;
-      const limit = parseInt(req.query.limit as string) || 10;
+      // Support both `limit` and `perPage` (frontend uses perPage)
+      const limit = parseInt((req.query.limit || req.query.perPage) as string) || 10;
       const adminMode = (req as any).user?.role === 'ADMIN';
-      
+
       const { items, meta } = await this.service.findAll({
         page,
         limit,
         adminMode,
         category: req.query.category as any,
         status: req.query.status as any,
-        search: req.query.search as string
+        search: req.query.search as string,
       });
       return ResponseUtil.success(res, 'Liste des projets récupérée', items, meta);
     } catch (error) {
@@ -45,7 +47,8 @@ export class ProjectController {
 
   findBySlug = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await this.service.findBySlug(req.params.slug as string);
+      const adminMode = (req as any).user?.role === 'ADMIN';
+      const result = await this.service.findBySlug(req.params.slug as string, adminMode);
       return ResponseUtil.success(res, 'Détails du projet récupérés par slug', result);
     } catch (error) {
       next(error);
@@ -81,7 +84,7 @@ export class ProjectController {
 
   publish = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await this.service.setStatus(req.params.id as string, 'published' as any);
+      const result = await this.service.setStatus(req.params.id as string, ProjectStatus.PUBLISHED);
       return ResponseUtil.success(res, 'Projet publié avec succès', result);
     } catch (error) {
       next(error);
@@ -90,7 +93,7 @@ export class ProjectController {
 
   unpublish = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await this.service.setStatus(req.params.id as string, 'draft' as any);
+      const result = await this.service.setStatus(req.params.id as string, ProjectStatus.DRAFT);
       return ResponseUtil.success(res, 'Projet dépublié avec succès', result);
     } catch (error) {
       next(error);
@@ -99,7 +102,7 @@ export class ProjectController {
 
   archive = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await this.service.setStatus(req.params.id as string, 'archived' as any);
+      const result = await this.service.setStatus(req.params.id as string, ProjectStatus.ARCHIVED);
       return ResponseUtil.success(res, 'Projet archivé avec succès', result);
     } catch (error) {
       next(error);

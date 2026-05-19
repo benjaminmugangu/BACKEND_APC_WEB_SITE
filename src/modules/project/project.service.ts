@@ -31,10 +31,13 @@ export class ProjectService {
     const qb = this.repository.createQueryBuilder('project');
 
     if (!query.adminMode) {
+      // Visiteurs publics : seulement les projets publiés et visibles
       qb.where('project.isVisible = :visible', { visible: true });
       qb.andWhere('project.status = :status', { status: ProjectStatus.PUBLISHED });
     } else {
-      if (query.status) {
+      // Admins : tous les statuts, sauf si un filtre spécifique est demandé
+      // On ignore 'all' car c'est la valeur "aucun filtre" côté frontend
+      if (query.status && query.status !== ('all' as any)) {
         qb.andWhere('project.status = :status', { status: query.status });
       }
     }
@@ -69,13 +72,15 @@ export class ProjectService {
     return project;
   }
 
-  async findBySlug(slug: string) {
-    const project = await this.repository.findOneBy({ 
-      slug, 
-      isVisible: true, 
-      status: ProjectStatus.PUBLISHED 
-    });
-    
+  async findBySlug(slug: string, adminMode = false) {
+    const query: any = { slug };
+    if (!adminMode) {
+      query.isVisible = true;
+      query.status = ProjectStatus.PUBLISHED;
+    }
+
+    const project = await this.repository.findOneBy(query);
+
     if (!project) {
       throw new NotFoundError('Projet introuvable');
     }

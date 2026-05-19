@@ -1,4 +1,5 @@
-import { IsString, IsNotEmpty, IsEnum, IsOptional, IsArray, IsBoolean, IsDateString, IsNumber } from 'class-validator';
+import { IsString, IsNotEmpty, IsEnum, IsOptional, IsArray, IsBoolean, IsDateString, IsNumber, Min, IsUrl, IsInt } from 'class-validator';
+import { Transform } from 'class-transformer';
 import { ProjectStatus, ProjectCategory } from '@/entities/project.entity';
 
 export class CreateProjectDto {
@@ -18,16 +19,18 @@ export class CreateProjectDto {
   @IsString()
   content?: string;
 
-  @IsEnum(ProjectCategory)
+  @IsEnum(ProjectCategory, { message: 'Catégorie invalide (agriculture, protection, dignite, paix)' })
   @IsNotEmpty({ message: 'La catégorie est requise' })
   category!: ProjectCategory;
 
-  @IsEnum(ProjectStatus)
+  @IsEnum(ProjectStatus, { message: 'Statut invalide (draft, published, archived)' })
   @IsOptional()
   status?: ProjectStatus;
 
   @IsOptional()
-  @IsNumber()
+  @IsNumber({}, { message: 'Le budget doit être un nombre' })
+  @Min(0, { message: 'Le budget ne peut pas être négatif' })
+  @Transform(({ value }) => Number(value))
   budget?: number;
 
   @IsOptional()
@@ -43,24 +46,26 @@ export class CreateProjectDto {
   province?: string;
 
   @IsOptional()
-  @IsNumber()
+  @IsInt({ message: 'Le nombre de bénéficiaires doit être un entier' })
+  @Min(0, { message: 'Le nombre de bénéficiaires ne peut pas être négatif' })
+  @Transform(({ value }) => parseInt(value, 10))
   beneficiaries?: number;
 
   @IsOptional()
-  @IsDateString()
+  @IsDateString({}, { message: 'La date de début doit être au format ISO 8601 (YYYY-MM-DD)' })
   startDate?: string;
 
   @IsOptional()
-  @IsDateString()
+  @IsDateString({}, { message: 'La date de fin doit être au format ISO 8601 (YYYY-MM-DD)' })
   endDate?: string;
 
   @IsOptional()
-  @IsString()
+  @IsUrl({}, { message: 'L\'URL de l\'image principale doit être une URL valide' })
   mainImage?: string;
 
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
+  @IsUrl({}, { each: true, message: 'Chaque URL de galerie doit être une URL valide' })
   gallery?: string[];
 
   @IsOptional()
@@ -87,15 +92,31 @@ export class UpdateProjectDto {
   @IsOptional() @IsString() content?: string;
   @IsOptional() @IsEnum(ProjectCategory) category?: ProjectCategory;
   @IsOptional() @IsEnum(ProjectStatus) status?: ProjectStatus;
-  @IsOptional() @IsNumber() budget?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  @Transform(({ value }) => Number(value))
+  budget?: number;
+
   @IsOptional() @IsString() currency?: string;
   @IsOptional() @IsString() location?: string;
   @IsOptional() @IsString() province?: string;
-  @IsOptional() @IsNumber() beneficiaries?: number;
+
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Transform(({ value }) => parseInt(value, 10))
+  beneficiaries?: number;
+
   @IsOptional() @IsDateString() startDate?: string;
   @IsOptional() @IsDateString() endDate?: string;
-  @IsOptional() @IsString() mainImage?: string;
-  @IsOptional() @IsArray() @IsString({ each: true }) gallery?: string[];
+
+  @IsOptional()
+  @IsUrl({}, { message: 'L\'URL de l\'image principale doit être une URL valide' })
+  mainImage?: string;
+
+  @IsOptional() @IsArray() @IsUrl({}, { each: true }) gallery?: string[];
   @IsOptional() @IsBoolean() featured?: boolean;
   @IsOptional() @IsBoolean() showOnHome?: boolean;
   @IsOptional() @IsBoolean() needsDonation?: boolean;
