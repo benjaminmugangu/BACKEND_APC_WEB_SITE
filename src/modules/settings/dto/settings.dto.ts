@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsOptional, IsObject, ValidateNested } from 'class-validator';
+import { IsString, IsOptional, IsObject, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
 class HeroSettingsDto {
@@ -27,6 +27,22 @@ class StatsSettingsDto {
   @IsString()
   @IsOptional()
   provinces?: string;
+
+  @IsString()
+  @IsOptional()
+  partners?: string;
+
+  @IsString()
+  @IsOptional()
+  teamMembers?: string;
+}
+
+class ContactSocialsDto {
+  @IsString() @IsOptional() facebook?: string;
+  @IsString() @IsOptional() twitter?: string;
+  @IsString() @IsOptional() linkedin?: string;
+  @IsString() @IsOptional() instagram?: string;
+  @IsString() @IsOptional() youtube?: string;
 }
 
 class ContactSettingsDto {
@@ -36,20 +52,55 @@ class ContactSettingsDto {
 
   @IsString()
   @IsOptional()
-  phone?: string;
+  phone1?: string;
+
+  @IsString()
+  @IsOptional()
+  phone2?: string;
+
+  @IsString()
+  @IsOptional()
+  whatsapp?: string;
 
   @IsString()
   @IsOptional()
   email?: string;
 
+  @IsString()
+  @IsOptional()
+  emailSupport?: string;
+
+  @IsString()
+  @IsOptional()
+  emailCareers?: string;
+
   @IsObject()
   @IsOptional()
-  socials?: {
-    facebook?: string;
-    twitter?: string;
-    linkedin?: string;
-    instagram?: string;
-  };
+  @ValidateNested()
+  @Type(() => ContactSocialsDto)
+  socials?: ContactSocialsDto;
+}
+
+class InstitutionSettingsDto {
+  @IsString() @IsOptional() name?: string;
+  @IsString() @IsOptional() acronym?: string;
+  @IsString() @IsOptional() foundationYear?: string;
+  @IsString() @IsOptional() vision?: string;
+  @IsString() @IsOptional() mission?: string;
+}
+
+class SeoSettingsDto {
+  @IsString() @IsOptional() metaTitle?: string;
+  @IsString() @IsOptional() metaDescription?: string;
+  @IsString() @IsOptional() metaKeywords?: string;
+  @IsString() @IsOptional() ogImage?: string;
+}
+
+class LogoSettingsDto {
+  @IsString() @IsOptional() logoHeader?: string;
+  @IsString() @IsOptional() logoFooter?: string;
+  @IsString() @IsOptional() logoDark?: string;
+  @IsString() @IsOptional() favicon?: string;
 }
 
 export class UpdateSettingsDto {
@@ -70,4 +121,22 @@ export class UpdateSettingsDto {
   @ValidateNested()
   @Type(() => ContactSettingsDto)
   contact?: ContactSettingsDto;
+
+  @IsObject()
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => InstitutionSettingsDto)
+  institution?: InstitutionSettingsDto;
+
+  @IsObject()
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => SeoSettingsDto)
+  seo?: SeoSettingsDto;
+
+  @IsObject()
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => LogoSettingsDto)
+  logo?: LogoSettingsDto;
 }
