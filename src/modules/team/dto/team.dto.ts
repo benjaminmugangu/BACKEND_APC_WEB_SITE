@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsOptional, IsUrl, IsBoolean, IsNumber, IsEnum, IsDateString } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsUrl, IsBoolean, IsNumber, IsEnum, IsDateString, IsEmail } from 'class-validator';
 import { MemberStatus, MemberAccess } from '@/entities/team-member.entity';
 
 export class CreateTeamMemberDto {
@@ -15,7 +15,7 @@ export class CreateTeamMemberDto {
   department?: string;
 
   @IsOptional()
-  @IsString()
+  @IsEmail({}, { message: 'Adresse email invalide' })
   email?: string;
 
   @IsOptional()
@@ -51,6 +51,10 @@ export class CreateTeamMemberDto {
   photoUrl?: string;
 
   @IsOptional()
+  @IsString()
+  photo?: string;
+
+  @IsOptional()
   @IsUrl({}, { message: 'URL LinkedIn invalide' })
   linkedinUrl?: string;
 
@@ -71,7 +75,7 @@ export class UpdateTeamMemberDto {
   @IsOptional() @IsString() name?: string;
   @IsOptional() @IsString() role?: string;
   @IsOptional() @IsString() department?: string;
-  @IsOptional() @IsString() email?: string;
+  @IsOptional() @IsEmail({}, { message: 'Adresse email invalide' }) email?: string;
   @IsOptional() @IsString() phone?: string;
   @IsOptional() @IsEnum(MemberAccess) access?: MemberAccess;
   @IsOptional() @IsEnum(MemberStatus) status?: MemberStatus;
@@ -80,7 +84,8 @@ export class UpdateTeamMemberDto {
   @IsOptional() @IsString() avatarColor?: string;
   @IsOptional() @IsString() bio?: string;
   @IsOptional() @IsString() photoUrl?: string;
-  @IsOptional() @IsUrl() linkedinUrl?: string;
+  @IsOptional() @IsString() photo?: string;
+  @IsOptional() @IsUrl({}, { message: 'URL LinkedIn invalide' }) linkedinUrl?: string;
   @IsOptional() @IsNumber() order?: number;
   @IsOptional() @IsNumber() activityCount?: number;
   @IsOptional() @IsBoolean() isActive?: boolean;
