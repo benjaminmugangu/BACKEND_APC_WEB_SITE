@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsEnum, IsOptional, IsUrl, IsBoolean, IsNumber, IsEmail } from 'class-validator';
+import { IsString, IsNotEmpty, IsEnum, IsOptional, IsUrl, IsBoolean, IsNumber, IsEmail, ValidateIf } from 'class-validator';
 import { PartnerType } from '@/entities/partner.entity';
 
 export class CreatePartnerDto {
@@ -15,6 +15,7 @@ export class CreatePartnerDto {
   logoUrl?: string;
 
   @IsOptional()
+  @ValidateIf(o => o.websiteUrl !== '' && o.websiteUrl !== null && o.websiteUrl !== undefined)
   @IsUrl({}, { message: 'URL du site web invalide (doit commencer par https://)' })
   websiteUrl?: string;
 
@@ -47,7 +48,10 @@ export class UpdatePartnerDto {
   @IsOptional() @IsString() name?: string;
   @IsOptional() @IsEnum(PartnerType) type?: PartnerType;
   @IsOptional() @IsString() logoUrl?: string;
-  @IsOptional() @IsUrl({}, { message: 'URL du site web invalide' }) websiteUrl?: string;
+  @IsOptional()
+  @ValidateIf(o => o.websiteUrl !== '' && o.websiteUrl !== null && o.websiteUrl !== undefined)
+  @IsUrl({}, { message: 'URL du site web invalide' })
+  websiteUrl?: string;
   @IsOptional() @IsString() description?: string;
   @IsOptional() @IsString() contactName?: string;
   @IsOptional() @IsEmail({}, { message: 'Email de contact invalide' }) contactEmail?: string;

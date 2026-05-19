@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsEnum, IsOptional, IsArray, IsBoolean, IsDateString, IsNumber, Min, IsUrl, IsInt } from 'class-validator';
+import { IsString, IsNotEmpty, IsEnum, IsOptional, IsArray, IsBoolean, IsDateString, IsNumber, Min, IsUrl, IsInt, ValidateIf } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { ProjectStatus, ProjectCategory } from '@/entities/project.entity';
 
@@ -60,6 +60,7 @@ export class CreateProjectDto {
   endDate?: string;
 
   @IsOptional()
+  @ValidateIf(o => o.mainImage !== '' && o.mainImage !== null && o.mainImage !== undefined)
   @IsUrl({}, { message: 'L\'URL de l\'image principale doit être une URL valide' })
   mainImage?: string;
 
@@ -113,6 +114,7 @@ export class UpdateProjectDto {
   @IsOptional() @IsDateString() endDate?: string;
 
   @IsOptional()
+  @ValidateIf(o => o.mainImage !== '' && o.mainImage !== null && o.mainImage !== undefined)
   @IsUrl({}, { message: 'L\'URL de l\'image principale doit être une URL valide' })
   mainImage?: string;
 
