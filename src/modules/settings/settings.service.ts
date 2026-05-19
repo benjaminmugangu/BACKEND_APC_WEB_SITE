@@ -51,10 +51,10 @@ export class SettingsService {
         ogImage: ""
       },
       logo: {
-        logoHeader: "",
-        logoFooter: "",
-        logoDark: "",
-        favicon: ""
+        logoHeader: "https://res.cloudinary.com/ddxgabibh/image/upload/v1779170149/apc-website/apc_logo_branding.png",
+        logoFooter: "https://res.cloudinary.com/ddxgabibh/image/upload/v1779170149/apc-website/apc_logo_branding.png",
+        logoDark: "https://res.cloudinary.com/ddxgabibh/image/upload/v1779170149/apc-website/apc_logo_branding.png",
+        favicon: "https://res.cloudinary.com/ddxgabibh/image/upload/v1779170149/apc-website/apc_logo_branding.png"
       }
     };
 
@@ -94,7 +94,7 @@ export class SettingsService {
         modified = true;
       }
       
-      if (!settings.logo) {
+      if (!settings.logo || !settings.logo.logoHeader) {
         settings.logo = defaults.logo;
         modified = true;
       }
