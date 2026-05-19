@@ -8,6 +8,9 @@ export class TeamService {
   private repository = AppDataSource.getRepository(TeamMember);
 
   async create(data: CreateTeamMemberDto) {
+    if (data.photo && !data.photoUrl) {
+      data.photoUrl = data.photo;
+    }
     const member = this.repository.create(data);
     return await this.repository.save(member);
   }
@@ -54,6 +57,9 @@ export class TeamService {
   }
 
   async update(id: string, data: UpdateTeamMemberDto) {
+    if (data.photo && !data.photoUrl) {
+      data.photoUrl = data.photo;
+    }
     const member = await this.findOne(id);
     Object.assign(member, data);
     return await this.repository.save(member);
