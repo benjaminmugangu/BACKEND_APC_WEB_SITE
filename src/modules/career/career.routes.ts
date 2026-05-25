@@ -77,7 +77,7 @@ router.get('/:id', controller.findOne);
 
 // Routes administratives (Protégées)
 router.use(authMiddleware);
-router.use(authorize(UserRole.ADMIN));
+router.use(authorize(UserRole.ADMIN, UserRole.ADMIN_RH));
 
 /**
  * @swagger
