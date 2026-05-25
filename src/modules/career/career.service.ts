@@ -1,6 +1,6 @@
 import { In } from 'typeorm';
 import { AppDataSource } from '@/config/database.config';
-import { Career } from '@/entities/career.entity';
+import { Career, CareerStatus } from '@/entities/career.entity';
 import { CreateCareerDto, UpdateCareerDto } from './dto/career.dto';
 import { NotFoundError } from '@/common/utils/error.util';
 import { PaginationUtil } from '@/common/utils/pagination.util';
@@ -10,6 +10,8 @@ export class CareerService {
 
   async create(data: CreateCareerDto) {
     const career = this.repository.create(data);
+    // Sync isOpen from status so the public filter still works
+    career.isOpen = !data.status || data.status === CareerStatus.OPEN;
     return await this.repository.save(career);
   }
 
@@ -17,7 +19,7 @@ export class CareerService {
     const query = this.repository.createQueryBuilder('career');
 
     if (!adminMode) {
-      query.where('career.isOpen = :open', { open: true });
+      query.where('career.status = :status', { status: CareerStatus.OPEN });
     }
 
     query.orderBy('career.createdAt', 'DESC')
@@ -25,7 +27,7 @@ export class CareerService {
          .take(limit);
 
     const [items, total] = await query.getManyAndCount();
-    
+
     return {
       items,
       meta: PaginationUtil.getMeta(total, page, limit)
@@ -35,7 +37,7 @@ export class CareerService {
   async findOne(id: string) {
     const career = await this.repository.findOneBy({ id });
     if (!career) {
-      throw new NotFoundError('Offre/Appel d\'offre introuvable');
+      throw new NotFoundError('Offre d\'emploi introuvable');
     }
     return career;
   }
@@ -43,6 +45,10 @@ export class CareerService {
   async update(id: string, data: UpdateCareerDto) {
     const career = await this.findOne(id);
     Object.assign(career, data);
+    // Sync isOpen from status
+    if (data.status !== undefined) {
+      career.isOpen = data.status === CareerStatus.OPEN;
+    }
     return await this.repository.save(career);
   }
 
@@ -58,7 +64,8 @@ export class CareerService {
   }
 
   async bulkSetStatus(ids: string[], isOpen: boolean) {
-    await this.repository.update({ id: In(ids) }, { isOpen });
+    const status = isOpen ? CareerStatus.OPEN : CareerStatus.CLOSED;
+    await this.repository.update({ id: In(ids) }, { isOpen, status });
     return true;
   }
 }
