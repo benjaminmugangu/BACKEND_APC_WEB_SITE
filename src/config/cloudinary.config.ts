@@ -15,12 +15,19 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req, file) => {
     const isImage = file.mimetype.startsWith('image/');
-    return {
-      folder: 'apc-website',
-      resource_type: isImage ? 'image' : 'raw',
-      format: file.originalname.split('.').pop(), // Garder l'extension originale
-      allowed_formats: ['jpg', 'png', 'jpeg', 'webp', 'pdf', 'doc', 'docx'],
-    };
+    if (isImage) {
+      return {
+        folder: 'apc-website',
+        resource_type: 'image',
+        format: file.originalname.split('.').pop(), // Garder l'extension originale
+        allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
+      };
+    } else {
+      return {
+        folder: 'apc-website',
+        resource_type: 'raw',
+      };
+    }
   },
 });
 

@@ -10,7 +10,7 @@ const controller = new MediaController();
 
 // Seuls les admins peuvent uploader des fichiers
 router.use(authMiddleware);
-router.use(authorize(UserRole.ADMIN));
+router.use(authorize(UserRole.ADMIN, UserRole.ADMIN_RH));
 
 router.post('/upload', upload.single('file'), controller.uploadImage);
 

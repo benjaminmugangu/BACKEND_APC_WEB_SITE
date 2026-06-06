@@ -1,10 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import { AppDataSource } from '@/config/database.config';
 import { TenderSubmission } from '@/entities/tender-submission.entity';
+import { Tender } from '@/entities/tender.entity';
 import { ResponseUtil } from '@/common/utils/response.util';
+import { emailService } from '@/common/services/email.service';
 
 export class SubmissionController {
   private repository = AppDataSource.getRepository(TenderSubmission);
+  private tenderRepository = AppDataSource.getRepository(Tender);
 
   submit = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -24,6 +27,18 @@ export class SubmissionController {
       });
 
       const result = await this.repository.save(submission);
+
+      // Fire-and-forget email notification
+      const tender = await this.tenderRepository.findOneBy({ id: tenderId });
+      emailService.notifyNewTenderSubmission({
+        companyName,
+        contactName,
+        email,
+        phone,
+        tenderTitle: tender?.title,
+        tenderRef: tender?.reference,
+      });
+
       return ResponseUtil.created(res, 'Offre soumise avec succès', result);
     } catch (error) {
       next(error);
