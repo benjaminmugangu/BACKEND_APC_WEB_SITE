@@ -12,6 +12,7 @@ import { Career } from '../entities/career.entity';
 import { Settings } from '../entities/settings.entity';
 import { Application } from '../entities/application.entity';
 import { TenderSubmission } from '../entities/tender-submission.entity';
+import { BeneficiaryTestimonial } from '../entities/testimonial.entity';
 
 dotenv.config();
 
@@ -26,7 +27,7 @@ export const AppDataSource = new DataSource({
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
   synchronize: process.env.NODE_ENV === 'development' || process.env.DB_SYNCHRONIZE === 'true',
   logging: process.env.NODE_ENV === 'development',
-  entities: [User, Message, News, Project, Service, Partner, TeamMember, Tender, Career, Settings, Application, TenderSubmission],
+  entities: [User, Message, News, Project, Service, Partner, TeamMember, Tender, Career, Settings, Application, TenderSubmission, BeneficiaryTestimonial],
   migrations: [],
   subscribers: [],
 });

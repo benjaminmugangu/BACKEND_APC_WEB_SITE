@@ -3,12 +3,15 @@ import { Application, ApplicationStatus } from '@/entities/application.entity';
 import { Career } from '@/entities/career.entity';
 import { NotFoundError, BadRequestError } from '@/common/utils/error.util';
 import { CreateApplicationDto } from './dto/application.dto';
+import { emailService } from '@/common/services/email.service';
 
 export class ApplicationService {
   private repository = AppDataSource.getRepository(Application);
   private careerRepository = AppDataSource.getRepository(Career);
 
   async apply(data: CreateApplicationDto, cvUrl: string | null) {
+    let careerTitle: string | undefined;
+
     if (data.careerId) {
       const career = await this.careerRepository.findOneBy({ id: data.careerId });
       if (!career) {
@@ -17,6 +20,7 @@ export class ApplicationService {
       if (!career.isOpen) {
         throw new BadRequestError('Cette offre d\'emploi est fermée aux candidatures');
       }
+      careerTitle = career.title;
     }
 
     const application = this.repository.create({
@@ -31,7 +35,19 @@ export class ApplicationService {
       status: ApplicationStatus.PENDING
     });
 
-    return await this.repository.save(application);
+    const saved = await this.repository.save(application);
+
+    // Fire-and-forget email notification
+    emailService.notifyNewApplication({
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      phone: data.phone,
+      type: data.type,
+      careerTitle,
+    });
+
+    return saved;
   }
 
   async findAll() {
