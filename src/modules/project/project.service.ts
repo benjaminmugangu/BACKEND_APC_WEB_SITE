@@ -1,5 +1,5 @@
 import { AppDataSource } from '@/config/database.config';
-import { Project, ProjectStatus, ProjectCategory } from '@/entities/project.entity';
+import { Project, ProjectStatus } from '@/entities/project.entity';
 import { CreateProjectDto, UpdateProjectDto } from './dto/project.dto';
 import { NotFoundError, ConflictError } from '@/common/utils/error.util';
 import { PaginationUtil } from '@/common/utils/pagination.util';
@@ -22,13 +22,14 @@ export class ProjectService {
     page?: number;
     limit?: number;
     adminMode?: boolean;
-    category?: ProjectCategory;
+    category?: string;
     status?: ProjectStatus;
     search?: string;
   }) {
     const page = query.page || 1;
     const limit = query.limit || 10;
-    const qb = this.repository.createQueryBuilder('project');
+    const qb = this.repository.createQueryBuilder('project')
+      .leftJoinAndSelect('project.category', 'category');
 
     if (!query.adminMode) {
       // Visiteurs publics : seulement les projets publiés et visibles
@@ -43,7 +44,7 @@ export class ProjectService {
     }
 
     if (query.category) {
-      qb.andWhere('project.category = :category', { category: query.category });
+      qb.andWhere('project.categoryId = :category', { category: query.category });
     }
 
     if (query.search) {
@@ -65,7 +66,7 @@ export class ProjectService {
   }
 
   async findOne(id: string) {
-    const project = await this.repository.findOneBy({ id });
+    const project = await this.repository.findOne({ where: { id }, relations: ['category'] });
     if (!project) {
       throw new NotFoundError('Projet introuvable');
     }
@@ -79,7 +80,7 @@ export class ProjectService {
       query.status = ProjectStatus.PUBLISHED;
     }
 
-    const project = await this.repository.findOneBy(query);
+    const project = await this.repository.findOne({ where: query, relations: ['category'] });
 
     if (!project) {
       throw new NotFoundError('Projet introuvable');
