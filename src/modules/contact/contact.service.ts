@@ -31,7 +31,7 @@ export class ContactService {
     }
 
     if (search) {
-      qb.andWhere('(message.sender ILIKE :search OR message.subject ILIKE :search OR message.email ILIKE :search)', { 
+      qb.andWhere('(message.sender LIKE :search OR message.subject LIKE :search OR message.email LIKE :search)', { 
         search: `%${search}%` 
       });
     }

@@ -20,7 +20,7 @@ export class CreateNewsDto {
 
   @IsOptional()
   @IsString()
-  category?: string;
+  categoryId?: string;
 
   @IsOptional()
   @IsString()
@@ -64,7 +64,7 @@ export class UpdateNewsDto {
   @IsOptional() @IsString() slug?: string;
   @IsOptional() @IsString() excerpt?: string;
   @IsOptional() @IsString() content?: string;
-  @IsOptional() @IsString() category?: string;
+  @IsOptional() @IsString() categoryId?: string;
   @IsOptional() @IsString() author?: string;
   @IsOptional() @IsString() authorId?: string;
   @IsOptional() @IsNumber() readTime?: number;

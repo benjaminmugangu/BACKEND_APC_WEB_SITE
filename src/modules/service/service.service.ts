@@ -28,7 +28,7 @@ export class ServiceService {
     }
 
     if (query.search) {
-      qb.andWhere('(service.name ILIKE :search OR service.description ILIKE :search)', { 
+      qb.andWhere('(service.name LIKE :search OR service.description LIKE :search)', { 
         search: `%${query.search}%` 
       });
     }

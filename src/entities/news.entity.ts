@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne } from 'typeorm';
+import { NewsCategory } from './news-category.entity';
 
 export enum NewsStatus {
   DRAFT = 'draft',
@@ -76,8 +77,11 @@ export class News {
   @Column('text')
   content!: string;
 
-  @Column({ default: 'Impact' })
-  category!: string;
+  @ManyToOne(() => NewsCategory, category => category.newsList, { nullable: true, onDelete: 'SET NULL' })
+  category!: NewsCategory;
+
+  @Column({ nullable: true })
+  categoryId!: string;
 
   @Column({ nullable: true })
   author!: string;

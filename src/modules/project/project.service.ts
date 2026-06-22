@@ -48,7 +48,7 @@ export class ProjectService {
     }
 
     if (query.search) {
-      qb.andWhere('(project.title ILIKE :search OR project.description ILIKE :search)', { 
+      qb.andWhere('(project.title LIKE :search OR project.description LIKE :search)', { 
         search: `%${query.search}%` 
       });
     }

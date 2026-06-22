@@ -37,7 +37,7 @@ export class TeamService {
     }
 
     if (query.search) {
-      qb.andWhere('(team.name ILIKE :search OR team.role ILIKE :search)', { 
+      qb.andWhere('(team.name LIKE :search OR team.role LIKE :search)', { 
         search: `%${query.search}%` 
       });
     }
