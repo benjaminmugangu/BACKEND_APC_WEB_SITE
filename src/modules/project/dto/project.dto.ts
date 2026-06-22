@@ -1,6 +1,6 @@
 import { IsString, IsNotEmpty, IsEnum, IsOptional, IsArray, IsBoolean, IsDateString, IsNumber, Min, IsUrl, IsInt, ValidateIf } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { ProjectStatus, ProjectCategory } from '@/entities/project.entity';
+import { ProjectStatus } from '@/entities/project.entity';
 
 export class CreateProjectDto {
   @IsString()
@@ -19,9 +19,9 @@ export class CreateProjectDto {
   @IsString()
   content?: string;
 
-  @IsEnum(ProjectCategory, { message: 'Catégorie invalide (agriculture, protection, dignite, paix)' })
+  @IsString()
   @IsNotEmpty({ message: 'La catégorie est requise' })
-  category!: ProjectCategory;
+  categoryId!: string;
 
   @IsEnum(ProjectStatus, { message: 'Statut invalide (draft, published, archived)' })
   @IsOptional()
@@ -91,7 +91,7 @@ export class UpdateProjectDto {
   @IsOptional() @IsString() slug?: string;
   @IsOptional() @IsString() description?: string;
   @IsOptional() @IsString() content?: string;
-  @IsOptional() @IsEnum(ProjectCategory) category?: ProjectCategory;
+  @IsOptional() @IsString() categoryId?: string;
   @IsOptional() @IsEnum(ProjectStatus) status?: ProjectStatus;
 
   @IsOptional()

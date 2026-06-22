@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 import { errorMiddleware } from '@/middleware/error/error.middleware';
 import authRoutes from '@/modules/auth/auth.routes';
 import projectRoutes from '@/modules/project/project.routes';
+import projectCategoryRoutes from '@/modules/project/project-category.routes';
 import newsRoutes from '@/modules/news/news.routes';
 import careerRoutes from '@/modules/career/career.routes';
 import serviceRoutes from '@/modules/service/service.routes';
@@ -71,6 +72,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // 6. Modules métiers
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/projects', projectRoutes);
+app.use('/api/v1/project-categories', projectCategoryRoutes);
 app.use('/api/v1/news', newsRoutes);
 app.use('/api/v1/careers', careerRoutes);
 app.use('/api/v1/services', serviceRoutes);

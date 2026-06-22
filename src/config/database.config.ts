@@ -4,6 +4,7 @@ import { User } from '../entities/user.entity';
 import { Message } from '../entities/message.entity';
 import { News } from '../entities/news.entity';
 import { Project } from '../entities/project.entity';
+import { ProjectCategory } from '../entities/project-category.entity';
 import { Service } from '../entities/service.entity';
 import { Partner } from '../entities/partner.entity';
 import { TeamMember } from '../entities/team-member.entity';
@@ -27,7 +28,7 @@ export const AppDataSource = new DataSource({
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
   synchronize: process.env.NODE_ENV === 'development' || process.env.DB_SYNCHRONIZE === 'true',
   logging: process.env.NODE_ENV === 'development',
-  entities: [User, Message, News, Project, Service, Partner, TeamMember, Tender, Career, Settings, Application, TenderSubmission, BeneficiaryTestimonial],
+  entities: [User, Message, News, Project, ProjectCategory, Service, Partner, TeamMember, Tender, Career, Settings, Application, TenderSubmission, BeneficiaryTestimonial],
   migrations: [],
   subscribers: [],
 });

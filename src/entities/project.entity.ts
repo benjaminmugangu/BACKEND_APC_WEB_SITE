@@ -1,11 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne } from 'typeorm';
 
-export enum ProjectCategory {
-  AGRICULTURE = 'agriculture',
-  PROTECTION  = 'protection',
-  DIGNITE     = 'dignite',
-  PAIX        = 'paix',
-}
+import { ProjectCategory } from './project-category.entity';
 
 export enum ProjectStatus {
   DRAFT     = 'draft',
@@ -43,10 +38,11 @@ export enum ProjectStatus {
  *           type: string
  *           nullable: true
  *           example: "<p>Contenu détaillé HTML du projet...</p>"
- *         category:
+ *         categoryId:
  *           type: string
- *           enum: [agriculture, protection, dignite, paix]
- *           example: "agriculture"
+ *           format: uuid
+ *         category:
+ *           $ref: '#/components/schemas/ProjectCategory'
  *         status:
  *           type: string
  *           enum: [draft, published, archived]
@@ -133,12 +129,11 @@ export class Project {
   @Column('text', { nullable: true })
   content!: string;
 
-  @Column({
-    type: 'enum',
-    enum: ProjectCategory,
-    default: ProjectCategory.AGRICULTURE,
-  })
+  @ManyToOne(() => ProjectCategory, category => category.projects, { nullable: true, onDelete: 'SET NULL' })
   category!: ProjectCategory;
+
+  @Column({ nullable: true })
+  categoryId!: string;
 
   @Column({
     type: 'enum',
