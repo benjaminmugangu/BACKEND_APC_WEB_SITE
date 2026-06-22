@@ -18,14 +18,12 @@ import { BeneficiaryTestimonial } from '../entities/testimonial.entity';
 dotenv.config();
 
 export const AppDataSource = new DataSource({
-  type: 'postgres',
-  url: process.env.DATABASE_URL, // Priorité à l'URL complète si elle existe (Railway/Heroku)
+  type: 'mysql',
   host: process.env.DB_HOST || 'localhost',
-  port: parseInt(process.env.DB_PORT || '5432'),
-  username: process.env.DB_USER || 'postgres',
-  password: process.env.DB_PASSWORD || 'postgres',
+  port: parseInt(process.env.DB_PORT || '3306'),
+  username: process.env.DB_USER || 'root',
+  password: process.env.DB_PASSWORD || '',
   database: process.env.DB_NAME || 'apc_db',
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
   synchronize: process.env.NODE_ENV === 'development' || process.env.DB_SYNCHRONIZE === 'true',
   logging: process.env.NODE_ENV === 'development',
   entities: [User, Message, News, Project, ProjectCategory, Service, Partner, TeamMember, Tender, Career, Settings, Application, TenderSubmission, BeneficiaryTestimonial],
