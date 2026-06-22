@@ -5,6 +5,7 @@ import { Message } from '../entities/message.entity';
 import { News } from '../entities/news.entity';
 import { Project } from '../entities/project.entity';
 import { ProjectCategory } from '../entities/project-category.entity';
+import { NewsCategory } from '../entities/news-category.entity';
 import { Service } from '../entities/service.entity';
 import { Partner } from '../entities/partner.entity';
 import { TeamMember } from '../entities/team-member.entity';
@@ -26,7 +27,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME || 'apc_db',
   synchronize: process.env.NODE_ENV === 'development' || process.env.DB_SYNCHRONIZE === 'true',
   logging: process.env.NODE_ENV === 'development',
-  entities: [User, Message, News, Project, ProjectCategory, Service, Partner, TeamMember, Tender, Career, Settings, Application, TenderSubmission, BeneficiaryTestimonial],
+  entities: [User, Message, News, NewsCategory, Project, ProjectCategory, Service, Partner, TeamMember, Tender, Career, Settings, Application, TenderSubmission, BeneficiaryTestimonial],
   migrations: [],
   subscribers: [],
 });

@@ -25,7 +25,7 @@ export class NewsService {
     page?: number;
     limit?: number;
     adminMode?: boolean;
-    category?: string;
+    categoryId?: string;
     status?: NewsStatus;
     featured?: boolean;
     search?: string;
@@ -43,8 +43,10 @@ export class NewsService {
       }
     }
 
-    if (query.category) {
-      qb.andWhere('news.category = :category', { category: query.category });
+    qb.leftJoinAndSelect('news.category', 'categoryObj');
+
+    if (query.categoryId) {
+      qb.andWhere('news.categoryId = :categoryId', { categoryId: query.categoryId });
     }
 
     if (query.featured !== undefined) {
@@ -52,7 +54,7 @@ export class NewsService {
     }
 
     if (query.search) {
-      qb.andWhere('(news.title ILIKE :search OR news.content ILIKE :search)', { 
+      qb.andWhere('(news.title LIKE :search OR news.content LIKE :search)', { 
         search: `%${query.search}%` 
       });
     }
@@ -71,7 +73,10 @@ export class NewsService {
   }
 
   async findOne(id: string) {
-    const news = await this.repository.findOneBy({ id });
+    const news = await this.repository.findOne({ 
+      where: { id },
+      relations: ['category']
+    });
     if (!news) {
       throw new NotFoundError('Actualité introuvable');
     }
@@ -82,7 +87,8 @@ export class NewsService {
     let news;
     if (adminMode) {
       news = await this.repository.findOne({
-        where: { slug }
+        where: { slug },
+        relations: ['category']
       });
     } else {
       news = await this.repository.findOne({
@@ -90,7 +96,8 @@ export class NewsService {
           slug,
           status: NewsStatus.PUBLISHED,
           publishDate: LessThanOrEqual(new Date())
-        }
+        },
+        relations: ['category']
       });
     }
 

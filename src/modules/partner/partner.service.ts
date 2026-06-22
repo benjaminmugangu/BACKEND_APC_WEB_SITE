@@ -28,7 +28,7 @@ export class PartnerService {
     }
 
     if (query.search) {
-      qb.andWhere('(partner.name ILIKE :search OR partner.description ILIKE :search)', { 
+      qb.andWhere('(partner.name LIKE :search OR partner.description LIKE :search)', { 
         search: `%${query.search}%` 
       });
     }

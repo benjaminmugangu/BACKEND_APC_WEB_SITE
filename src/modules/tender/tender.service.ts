@@ -43,7 +43,7 @@ export class TenderService {
     }
 
     if (search) {
-      qb.andWhere('(tender.title ILIKE :search OR tender.reference ILIKE :search)', { 
+      qb.andWhere('(tender.title LIKE :search OR tender.reference LIKE :search)', { 
         search: `%${search}%` 
       });
     }

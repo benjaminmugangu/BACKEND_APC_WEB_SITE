@@ -24,7 +24,7 @@ export class NewsController {
         page,
         limit,
         adminMode,
-        category: req.query.category as string,
+        categoryId: req.query.categoryId as string,
         status: req.query.status as any,
         featured: req.query.featured === 'true' ? true : req.query.featured === 'false' ? false : undefined,
         search: req.query.search as string
