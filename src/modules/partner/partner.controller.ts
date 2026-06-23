@@ -19,7 +19,7 @@ export class PartnerController {
       const adminMode = (req as any).user?.role === 'ADMIN';
       const result = await this.service.findAll({
         adminMode,
-        type: req.query.type as any,
+        categoryId: req.query.categoryId as string,
         search: req.query.search as string
       });
       return ResponseUtil.success(res, 'Liste des partenaires récupérée', result);
