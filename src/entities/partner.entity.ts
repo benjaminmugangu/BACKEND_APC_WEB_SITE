@@ -1,11 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne } from 'typeorm';
 
-export enum PartnerType {
-  DONOR = 'DONOR',         // Bailleur de fonds
-  TECHNICAL = 'TECHNICAL', // Partenaire technique
-  LOCAL = 'LOCAL',         // Partenaire local
-  STRATEGIC = 'STRATEGIC'  // Partenaire stratégique
-}
+import { PartnerCategory } from './partner-category.entity';
 
 /**
  * @swagger
@@ -26,16 +21,10 @@ export enum PartnerType {
  *           type: string
  *           description: Nom officiel de l'organisation partenaire
  *           example: "PAM — Programme Alimentaire Mondial"
- *         type:
+ *         category:
  *           type: string
- *           enum: [DONOR, TECHNICAL, LOCAL, STRATEGIC]
- *           description: |
- *             Catégorie du partenariat :
- *             - DONOR : Bailleur de fonds (financement)
- *             - TECHNICAL : Partenaire d'appui technique
- *             - LOCAL : Organisation locale ou communautaire
- *             - STRATEGIC : Partenaire stratégique à long terme
- *           example: "DONOR"
+ *           description: ID de la catégorie du partenaire
+ *           example: "uuid-de-la-categorie"
  *         logoUrl:
  *           type: string
  *           nullable: true
@@ -93,12 +82,11 @@ export class Partner {
   @Column()
   name!: string;
 
-  @Column({
-    type: 'enum',
-    enum: PartnerType,
-    default: PartnerType.LOCAL
-  })
-  type!: PartnerType;
+  @ManyToOne(() => PartnerCategory, category => category.partners, { nullable: true, onDelete: 'SET NULL' })
+  category!: PartnerCategory;
+
+  @Column({ nullable: true })
+  categoryId!: string;
 
   @Column({ nullable: true })
   logoUrl!: string;

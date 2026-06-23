@@ -1,5 +1,5 @@
 import { AppDataSource } from '@/config/database.config';
-import { Partner, PartnerType } from '@/entities/partner.entity';
+import { Partner } from '@/entities/partner.entity';
 import { CreatePartnerDto, UpdatePartnerDto } from './dto/partner.dto';
 import { NotFoundError } from '@/common/utils/error.util';
 import { In } from 'typeorm';
@@ -14,17 +14,18 @@ export class PartnerService {
 
   async findAll(query: {
     adminMode?: boolean;
-    type?: PartnerType;
+    categoryId?: string;
     search?: string;
   }) {
-    const qb = this.repository.createQueryBuilder('partner');
+    const qb = this.repository.createQueryBuilder('partner')
+      .leftJoinAndSelect('partner.category', 'categoryObj');
 
     if (!query.adminMode) {
       qb.where('partner.isActive = :active', { active: true });
     }
 
-    if (query.type) {
-      qb.andWhere('partner.type = :type', { type: query.type });
+    if (query.categoryId) {
+      qb.andWhere('partner.categoryId = :categoryId', { categoryId: query.categoryId });
     }
 
     if (query.search) {
@@ -39,7 +40,10 @@ export class PartnerService {
   }
 
   async findOne(id: string) {
-    const partner = await this.repository.findOneBy({ id });
+    const partner = await this.repository.findOne({
+      where: { id },
+      relations: ['category']
+    });
     if (!partner) {
       throw new NotFoundError('Partenaire introuvable');
     }
