@@ -41,7 +41,8 @@ app.use(cors({
     // Autoriser les requêtes sans origine (comme Postman ou les outils serveurs)
     if (!origin) return callback(null, true);
     
-    if (allowedOrigins.indexOf(origin) !== -1) {
+    // Autoriser explicitement le domaine principal en production, même si le .env est mal configuré
+    if (allowedOrigins.indexOf(origin) !== -1 || origin.includes('agri-peaceandchild.org')) {
       callback(null, true);
     } else {
       console.log(`CORS blocked for origin: ${origin}`);
