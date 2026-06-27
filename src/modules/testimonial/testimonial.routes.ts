@@ -48,7 +48,7 @@ router.get('/:id', controller.findOne);
 
 // Routes administratives (Protégées)
 router.use(authMiddleware);
-router.use(authorize(UserRole.ADMIN));
+router.use(authorize(UserRole.ADMIN, UserRole.ADMIN_RH));
 
 /**
  * @swagger
@@ -70,7 +70,7 @@ router.get('/admin/all', controller.findAll);
  *     security:
  *       - bearerAuth: []
  */
-router.post('/', validationMiddleware(CreateTestimonialDto), controller.create);
+router.post('/', authorize(UserRole.ADMIN), validationMiddleware(CreateTestimonialDto), controller.create);
 
 /**
  * @swagger
@@ -81,9 +81,9 @@ router.post('/', validationMiddleware(CreateTestimonialDto), controller.create);
  *     security:
  *       - bearerAuth: []
  */
-router.put('/:id', validationMiddleware(UpdateTestimonialDto), controller.update);
+router.put('/:id', authorize(UserRole.ADMIN), validationMiddleware(UpdateTestimonialDto), controller.update);
 
-router.delete('/bulk', controller.bulkDelete);
+router.delete('/bulk', authorize(UserRole.ADMIN), controller.bulkDelete);
 
 /**
  * @swagger
@@ -94,6 +94,6 @@ router.delete('/bulk', controller.bulkDelete);
  *     security:
  *       - bearerAuth: []
  */
-router.delete('/:id', controller.remove);
+router.delete('/:id', authorize(UserRole.ADMIN), controller.remove);
 
 export default router;

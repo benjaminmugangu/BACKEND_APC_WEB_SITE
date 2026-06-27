@@ -18,7 +18,7 @@ export class CareerController {
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
-      const adminMode = (req as any).user?.role === 'ADMIN';
+      const adminMode = ['ADMIN', 'ADMIN_RH'].includes((req as any).user?.role);
       
       const { items, meta } = await this.service.findAll(page, limit, adminMode);
       return ResponseUtil.success(res, 'Liste des offres récupérée', items, meta);

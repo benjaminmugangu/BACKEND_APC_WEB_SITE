@@ -16,7 +16,7 @@ export class ServiceController {
 
   findAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const adminMode = (req as any).user?.role === 'ADMIN';
+      const adminMode = ['ADMIN', 'ADMIN_RH'].includes((req as any).user?.role);
       const result = await this.service.findAll({
         adminMode,
         search: req.query.search as string
