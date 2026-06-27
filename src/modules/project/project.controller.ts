@@ -20,7 +20,7 @@ export class ProjectController {
       const page = parseInt(req.query.page as string) || 1;
       // Support both `limit` and `perPage` (frontend uses perPage)
       const limit = parseInt((req.query.limit || req.query.perPage) as string) || 10;
-      const adminMode = (req as any).user?.role === 'ADMIN';
+      const adminMode = ['ADMIN', 'ADMIN_RH'].includes((req as any).user?.role);
 
       const { items, meta } = await this.service.findAll({
         page,
@@ -47,7 +47,7 @@ export class ProjectController {
 
   findBySlug = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const adminMode = (req as any).user?.role === 'ADMIN';
+      const adminMode = ['ADMIN', 'ADMIN_RH'].includes((req as any).user?.role);
       const result = await this.service.findBySlug(req.params.slug as string, adminMode);
       return ResponseUtil.success(res, 'Détails du projet récupérés par slug', result);
     } catch (error) {

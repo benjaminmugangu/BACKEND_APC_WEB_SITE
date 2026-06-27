@@ -114,7 +114,7 @@ router.post('/', validationMiddleware(CreateMessageDto), controller.create);
 
 // ── ROUTES ADMINISTRATIVES (PROTÉGÉES PAR JWT & RÔLE ADMIN) ──
 router.use(authMiddleware);
-router.use(authorize(UserRole.ADMIN));
+router.use(authorize(UserRole.ADMIN, UserRole.ADMIN_RH));
 
 /**
  * @swagger
@@ -297,7 +297,7 @@ router.get('/:id', controller.findOne);
  *       200:
  *         description: Statut du message modifié avec succès
  */
-router.patch('/:id/status', validationMiddleware(UpdateMessageStatusDto), controller.setStatus);
+router.patch('/:id/status', authorize(UserRole.ADMIN), validationMiddleware(UpdateMessageStatusDto), controller.setStatus);
 
 /**
  * @swagger
@@ -319,7 +319,7 @@ router.patch('/:id/status', validationMiddleware(UpdateMessageStatusDto), contro
  *       200:
  *         description: Message marqué comme lu
  */
-router.patch('/:id/read', controller.markAsRead);
+router.patch('/:id/read', authorize(UserRole.ADMIN), controller.markAsRead);
 
 /**
  * @swagger
@@ -353,7 +353,7 @@ router.patch('/:id/read', controller.markAsRead);
  *       200:
  *         description: Réponse enregistrée avec succès, statut mis à jour à 'replied'
  */
-router.post('/:id/reply', controller.reply);
+router.post('/:id/reply', authorize(UserRole.ADMIN), controller.reply);
 
 /**
  * @swagger
@@ -383,7 +383,7 @@ router.post('/:id/reply', controller.reply);
  *       200:
  *         description: Messages supprimés de la base de données avec succès
  */
-router.delete('/bulk', controller.bulkDelete);
+router.delete('/bulk', authorize(UserRole.ADMIN), controller.bulkDelete);
 
 /**
  * @swagger
@@ -404,7 +404,7 @@ router.delete('/bulk', controller.bulkDelete);
  *       200:
  *         description: Message supprimé de la base de données avec succès
  */
-router.delete('/:id', controller.remove);
+router.delete('/:id', authorize(UserRole.ADMIN), controller.remove);
 
 export default router;
 

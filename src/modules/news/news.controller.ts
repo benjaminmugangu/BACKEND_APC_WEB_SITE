@@ -18,7 +18,7 @@ export class NewsController {
     try {
       const page = parseInt(req.query.page as string) || 1;
       const limit = parseInt(req.query.limit as string) || 10;
-      const adminMode = (req as any).user?.role === 'ADMIN';
+      const adminMode = ['ADMIN', 'ADMIN_RH'].includes((req as any).user?.role);
       
       const { items, meta } = await this.service.findAll({
         page,
@@ -46,7 +46,7 @@ export class NewsController {
 
   findBySlug = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const adminMode = (req as any).user?.role === 'ADMIN';
+      const adminMode = ['ADMIN', 'ADMIN_RH'].includes((req as any).user?.role);
       const result = await this.service.findBySlug(req.params.slug as string, adminMode);
       return ResponseUtil.success(res, 'Détails de l\'actualité récupérés par slug', result);
     } catch (error) {
