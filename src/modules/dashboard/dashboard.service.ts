@@ -27,10 +27,10 @@ export class DashboardService {
       activeTenders,
     ] = await Promise.all([
       this.careerRepo.count(),
-      this.careerRepo.count({ where: { isActive: true } as any }),
+      this.careerRepo.count({ where: { status: 'OPEN' as any } }),
       this.teamRepo.count(),
       this.tenderRepo.count(),
-      this.tenderRepo.count({ where: { isActive: true } as any }),
+      this.tenderRepo.count({ where: { status: 'open' as any } }),
     ]);
 
     const rhStats = {
