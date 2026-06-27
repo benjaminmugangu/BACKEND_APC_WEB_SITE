@@ -34,10 +34,33 @@ const seedAdmin = async () => {
 
     await userRepository.save(admin);
     console.log('--------------------------------------------------');
-    console.log('✅ Compte Administrateur créé avec succès !');
+    console.log('✅ Compte Administrateur ADMIN créé avec succès !');
     console.log(`Email : ${adminEmail}`);
     console.log('Mot de passe : Admin@2026!');
     console.log('--------------------------------------------------');
+
+    // Création du compte ADMIN_RH
+    const rhEmail = 'rh@apc-agri.org';
+    const existingRH = await userRepository.findOneBy({ email: rhEmail });
+    if (!existingRH) {
+      const hashedRHPassword = await bcrypt.hash('RH@2026!', 10);
+      const adminRH = userRepository.create({
+        firstName: 'Admin',
+        lastName: 'RH',
+        email: rhEmail,
+        password: hashedRHPassword,
+        role: UserRole.ADMIN_RH,
+        isActive: true,
+      });
+      await userRepository.save(adminRH);
+      console.log('--------------------------------------------------');
+      console.log('✅ Compte Administrateur RH créé avec succès !');
+      console.log(`Email : ${rhEmail}`);
+      console.log('Mot de passe : RH@2026!');
+      console.log('--------------------------------------------------');
+    } else {
+      console.log('Un compte ADMIN_RH existe déjà.');
+    }
 
     process.exit(0);
   } catch (error) {

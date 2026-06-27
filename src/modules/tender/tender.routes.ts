@@ -84,11 +84,11 @@ router.get('/:id', controller.findOne);
 
 // Routes administratives (Protégées)
 router.use(authMiddleware);
-router.use(authorize(UserRole.ADMIN, UserRole.ADMIN_RH));
 
-router.get('/submissions/all', submissionController.findAll);
+// Lecture : accessible aux deux rôles
+router.get('/submissions/all', authorize(UserRole.ADMIN, UserRole.ADMIN_RH), submissionController.findAll);
 
-
+// Écriture : ADMIN_RH seulement
 /**
  * @swagger
  * /api/v1/tenders:
@@ -107,133 +107,11 @@ router.get('/submissions/all', submissionController.findAll);
  *       201:
  *         description: Appel d'offres créé
  */
-router.post('/', validationMiddleware(CreateTenderDto), controller.create);
-
-/**
- * @swagger
- * /api/v1/tenders/{id}:
- *   put:
- *     summary: Mettre à jour un appel d'offres
- *     tags: [Tenders]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Tender'
- *     responses:
- *       200:
- *         description: Appel d'offres mis à jour
- */
-router.put('/:id', validationMiddleware(UpdateTenderDto), controller.update);
-
-/**
- * @swagger
- * /api/v1/tenders/bulk:
- *   delete:
- *     summary: Supprimer plusieurs appels d'offres
- *     tags: [Tenders]
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               ids:
- *                 type: array
- *                 items:
- *                   type: string
- *     responses:
- *       200:
- *         description: Supprimés avec succès
- */
-router.delete('/bulk', controller.bulkDelete);
-
-/**
- * @swagger
- * /api/v1/tenders/{id}:
- *   delete:
- *     summary: Supprimer un appel d'offres
- *     tags: [Tenders]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Appel d'offres supprimé
- */
-router.delete('/:id', controller.remove);
-
-/**
- * @swagger
- * /api/v1/tenders/{id}/status:
- *   patch:
- *     summary: Changer le statut d'un appel d'offres
- *     tags: [Tenders]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               status:
- *                 type: string
- *                 enum: [open, closed, cancelled, archived]
- *     responses:
- *       200:
- *         description: Statut mis à jour
- */
-/**
- * @swagger
- * /api/v1/tenders/bulk-status:
- *   patch:
- *     summary: Changer le statut de plusieurs appels d'offres
- *     tags: [Tenders]
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               ids:
- *                 type: array
- *                 items:
- *                   type: string
- *               status:
- *                 type: string
- *     responses:
- *       200:
- *         description: Statuts mis à jour
- */
-router.patch('/bulk-status', controller.bulkSetStatus);
-router.patch('/:id/status', controller.setStatus);
+router.post('/', authorize(UserRole.ADMIN_RH), validationMiddleware(CreateTenderDto), controller.create);
+router.put('/:id', authorize(UserRole.ADMIN_RH), validationMiddleware(UpdateTenderDto), controller.update);
+router.delete('/bulk', authorize(UserRole.ADMIN_RH), controller.bulkDelete);
+router.delete('/:id', authorize(UserRole.ADMIN_RH), controller.remove);
+router.patch('/bulk-status', authorize(UserRole.ADMIN_RH), controller.bulkSetStatus);
+router.patch('/:id/status', authorize(UserRole.ADMIN_RH), controller.setStatus);
 
 export default router;

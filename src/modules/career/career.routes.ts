@@ -77,18 +77,9 @@ router.get('/:id', controller.findOne);
 
 // Routes administratives (Protégées)
 router.use(authMiddleware);
-router.use(authorize(UserRole.ADMIN, UserRole.ADMIN_RH));
 
-/**
- * @swagger
- * /api/v1/careers/admin:
- *   get:
- *     summary: Récupérer toutes les opportunités (y compris les fermées) pour les admins
- *     tags: [Careers]
- *     security:
- *       - bearerAuth: []
- */
-router.get('/admin/all', controller.findAll);
+// Lecture : accessible aux deux rôles
+router.get('/admin/all', authorize(UserRole.ADMIN, UserRole.ADMIN_RH), controller.findAll);
 
 /**
  * @swagger
@@ -108,59 +99,14 @@ router.get('/admin/all', controller.findAll);
  *       201:
  *         description: Opportunité créée
  */
-router.post('/', validationMiddleware(CreateCareerDto), controller.create);
+// Écriture : ADMIN_RH seulement
+router.post('/', authorize(UserRole.ADMIN_RH), validationMiddleware(CreateCareerDto), controller.create);
+router.put('/:id', authorize(UserRole.ADMIN_RH), validationMiddleware(UpdateCareerDto), controller.update);
+router.delete('/bulk', authorize(UserRole.ADMIN_RH), controller.bulkDelete);
+router.delete('/:id', authorize(UserRole.ADMIN_RH), controller.remove);
+router.patch('/bulk-status', authorize(UserRole.ADMIN_RH), controller.bulkSetStatus);
 
-/**
- * @swagger
- * /api/v1/careers/{id}:
- *   put:
- *     summary: Mettre à jour une opportunité d'emploi
- *     tags: [Careers]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/Career'
- *     responses:
- *       200:
- *         description: Opportunité mise à jour
- */
-router.put('/:id', validationMiddleware(UpdateCareerDto), controller.update);
-
-router.delete('/bulk', controller.bulkDelete);
-
-/**
- * @swagger
- * /api/v1/careers/{id}:
- *   delete:
- *     summary: Supprimer une opportunité d'emploi
- *     tags: [Careers]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Opportunité supprimée
- */
-router.delete('/:id', controller.remove);
-
-router.patch('/bulk-status', controller.bulkSetStatus);
-
-// Routes de gestion des candidatures (Admin)
+// Candidatures — Lecture : les deux rôles
 /**
  * @swagger
  * /api/v1/careers/admin/applications:
@@ -173,78 +119,10 @@ router.patch('/bulk-status', controller.bulkSetStatus);
  *       200:
  *         description: Liste de toutes les candidatures
  */
-router.get('/admin/applications', applicationController.findAll);
-
-/**
- * @swagger
- * /api/v1/careers/admin/applications/{id}:
- *   get:
- *     summary: Récupérer une candidature par son ID (Admin)
- *     tags: [Applications]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Détails de la candidature
- */
-router.get('/admin/applications/:id', applicationController.findOne);
-
-/**
- * @swagger
- * /api/v1/careers/admin/applications/{id}/status:
- *   patch:
- *     summary: Mettre à jour le statut d'une candidature (Admin)
- *     tags: [Applications]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - status
- *             properties:
- *               status:
- *                 type: string
- *                 enum: [PENDING, REVIEWED, ACCEPTED, REJECTED]
- *     responses:
- *       200:
- *         description: Statut mis à jour avec succès
- */
-router.patch('/admin/applications/:id/status', applicationController.updateStatus);
-
-/**
- * @swagger
- * /api/v1/careers/admin/applications/{id}:
- *   delete:
- *     summary: Supprimer une candidature (Admin)
- *     tags: [Applications]
- *     security:
- *       - bearerAuth: []
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Candidature supprimée avec succès
- */
-router.delete('/admin/applications/:id', applicationController.remove);
+router.get('/admin/applications', authorize(UserRole.ADMIN, UserRole.ADMIN_RH), applicationController.findAll);
+router.get('/admin/applications/:id', authorize(UserRole.ADMIN, UserRole.ADMIN_RH), applicationController.findOne);
+// Écriture candidatures : ADMIN_RH seulement
+router.patch('/admin/applications/:id/status', authorize(UserRole.ADMIN_RH), applicationController.updateStatus);
+router.delete('/admin/applications/:id', authorize(UserRole.ADMIN_RH), applicationController.remove);
 
 export default router;
