@@ -11,8 +11,8 @@ export class DashboardController {
       const role = (req as any).user?.role as UserRole;
       const stats = await this.service.getStats(role);
       return ResponseUtil.success(res, 'Statistiques du tableau de bord récupérées', stats);
-    } catch (error) {
-      next(error);
+    } catch (error: any) {
+      return res.status(500).json({ success: false, message: error.message, stack: error.stack });
     }
   };
 }
