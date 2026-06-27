@@ -21,6 +21,7 @@ import tenderRoutes from '@/modules/tender/tender.routes';
 import contactRoutes from '@/modules/contact/contact.routes';
 import settingsRoutes from '@/modules/settings/settings.routes';
 import testimonialRoutes from '@/modules/testimonial/testimonial.routes';
+import dashboardRoutes from '@/modules/dashboard/dashboard.routes';
 import { ResponseUtil } from '@/common/utils/response.util';
 
 import swaggerUi from 'swagger-ui-express';
@@ -89,6 +90,7 @@ app.use('/api/v1/tenders', tenderRoutes);
 app.use('/api/v1/contact', contactRoutes);
 app.use('/api/v1/settings', settingsRoutes);
 app.use('/api/v1/testimonials', testimonialRoutes);
+app.use('/api/v1/stats/dashboard', dashboardRoutes);
 
 // 7. Gestionnaire d'erreurs (DOIT être le dernier)
 app.use(errorMiddleware);
