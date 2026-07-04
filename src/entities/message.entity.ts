@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { MessageSubject } from './message-subject.entity';
 
 export enum MessageStatus {
   UNREAD = 'unread',
@@ -7,6 +8,7 @@ export enum MessageStatus {
   ARCHIVED = 'archived'
 }
 
+/** @deprecated Remplacé par la relation MessageSubject. Conservé pour rétrocompatibilité. */
 export enum MessageType {
   CONTACT = 'contact',
   PARTNERSHIP = 'partnership',
@@ -66,12 +68,20 @@ export class Message {
   @Column('text')
   content!: string;
 
+  /** @deprecated Utiliser messageSubjectId à la place */
   @Column({
     type: 'enum',
     enum: MessageType,
-    default: MessageType.CONTACT
+    nullable: true
   })
   type!: MessageType;
+
+  @Column({ nullable: true })
+  messageSubjectId!: string;
+
+  @ManyToOne(() => MessageSubject, subject => subject.messages, { nullable: true, eager: true })
+  @JoinColumn({ name: 'messageSubjectId' })
+  messageSubject!: MessageSubject;
 
   @Column({
     type: 'enum',
