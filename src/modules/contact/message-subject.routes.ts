@@ -60,6 +60,17 @@ router.get('/', async (req, res, next) => {
  *       404:
  *         description: Sujet non trouvé
  */
+// ─── Routes protégées (Admin Tech uniquement) ──────────────────────────────
+// IMPORTANT: /admin/all doit être AVANT /:id pour qu'Express ne confonde pas 'admin' avec un param
+router.get('/admin/all', authMiddleware, authorize(UserRole.ADMIN), async (req, res, next) => {
+  try {
+    const subjects = await service.findAll(false);
+    return ResponseUtil.success(res, 'Liste complète des sujets récupérée', subjects);
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.get('/:id', async (req, res, next) => {
   try {
     const subject = await service.findOne(req.params.id);
@@ -69,30 +80,9 @@ router.get('/:id', async (req, res, next) => {
   }
 });
 
-// ─── Routes protégées (Admin Tech uniquement) ──────────────────────────────
+// ─── Middleware auth pour les routes d'écriture ─────────────────────────────
 router.use(authMiddleware);
 router.use(authorize(UserRole.ADMIN));
-
-/**
- * @swagger
- * /api/v1/message-subjects/admin/all:
- *   get:
- *     summary: Récupérer tous les sujets (actifs + inactifs) — Admin seulement
- *     tags: [Message Subjects]
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Liste complète des sujets
- */
-router.get('/admin/all', async (req, res, next) => {
-  try {
-    const subjects = await service.findAll(false);
-    return ResponseUtil.success(res, 'Liste complète des sujets récupérée', subjects);
-  } catch (err) {
-    next(err);
-  }
-});
 
 /**
  * @swagger
