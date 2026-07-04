@@ -51,16 +51,16 @@ export class Service {
   @Column('text', { nullable: true })
   descriptionEn!: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', length: 100, nullable: true })
   iconName!: string;
 
-  @Column({ default: 'bg-emerald-500' })
+  @Column({ type: 'varchar', length: 100, default: 'bg-emerald-500' })
   bgClass!: string;
 
-  @Column({ default: 'text-emerald-700' })
+  @Column({ type: 'varchar', length: 100, default: 'text-emerald-700' })
   accentClass!: string;
 
-  @Column({ nullable: true })
+  @Column('text', { nullable: true })
   mainImage!: string;
 
   @Column('json', { nullable: true })
