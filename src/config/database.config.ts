@@ -26,7 +26,7 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || '',
   database: process.env.DB_NAME || 'apc_db',
-  synchronize: process.env.NODE_ENV === 'development' || process.env.DB_SYNCHRONIZE === 'true',
+  synchronize: false, // NEVER use auto-sync in production — use migrations instead
   logging: process.env.NODE_ENV === 'development',
   entities: [User, Message, News, NewsCategory, Project, ProjectCategory, Service, Partner, PartnerCategory, TeamMember, Tender, Career, Settings, Application, TenderSubmission, BeneficiaryTestimonial],
   migrations: [],
