@@ -1,20 +1,45 @@
 import { Resend } from 'resend';
 import { logger } from '@/config/logger.config';
+import { AppDataSource } from '@/config/database.config';
+import { Settings } from '@/entities/settings.entity';
 
 /**
  * Centralized email notification service using Resend.
  * All notification emails are sent asynchronously and failures
  * are logged but never crash the calling flow.
+ *
+ * The destination email (MAIL_TO) is resolved dynamically at send-time:
+ *   1. Settings.contact.emailSupport  (DB — modifiable by Admin)
+ *   2. process.env.MAIL_TO            (fallback .env)
+ *   3. hardcoded default              (last resort)
  */
 class EmailService {
   private resend: Resend;
   private from: string;
-  private to: string;
 
   constructor() {
     this.resend = new Resend(process.env.RESEND_API_KEY || '');
     this.from = process.env.MAIL_FROM || 'APC <onboarding@resend.dev>';
-    this.to = process.env.MAIL_TO || 'coordination.nat@agri-peaceandchild.org';
+  }
+
+  /**
+   * Resolves the destination email address dynamically at send-time.
+   * Priority: Settings.contact.emailSupport > MAIL_TO env var > hardcoded default
+   */
+  private async resolveDestinationEmail(): Promise<string> {
+    try {
+      if (AppDataSource.isInitialized) {
+        const settingsRepo = AppDataSource.getRepository(Settings);
+        const settings = await settingsRepo.findOne({ where: { id: 1 } });
+        if (settings?.contact?.emailSupport) {
+          return settings.contact.emailSupport;
+        }
+      }
+    } catch (err) {
+      // DB temporarily unavailable — degrade gracefully
+      logger.warn('Could not resolve destination email from DB, falling back to env var:', err);
+    }
+    return process.env.MAIL_TO || 'coordination.nat@agri-peaceandchild.org';
   }
 
   /**
@@ -89,13 +114,16 @@ class EmailService {
   }
 
   /**
-   * Internal send wrapper – catches errors to avoid crashing the main flow.
+   * Internal send wrapper – resolves destination dynamically then sends.
+   * Catches errors to avoid crashing the main flow.
    */
   private async send(subject: string, html: string): Promise<void> {
     try {
+      const to = await this.resolveDestinationEmail();
+
       const { data, error } = await this.resend.emails.send({
         from: this.from,
-        to: [this.to],
+        to: [to],
         subject,
         html,
       });
@@ -103,7 +131,7 @@ class EmailService {
       if (error) {
         logger.error('Resend email error:', error);
       } else {
-        logger.info(`Email notification sent successfully (id: ${data?.id})`);
+        logger.info(`Email notification sent successfully to ${to} (id: ${data?.id})`);
       }
     } catch (err) {
       // Never let email failures crash the application flow
