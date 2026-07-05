@@ -63,7 +63,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // 4. Rate Limiting (Limiteur global)
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 1000, // 1000 requêtes par IP pour éviter les blocages lors de la navigation
+  max: 10000000000000, // Limite drastiquement augmentée pour les tests
   message: { success: false, message: 'Trop de requêtes, veuillez réessayer plus tard.' }
 });
 app.use(globalLimiter);
