@@ -12,6 +12,7 @@ import { PartnerCategory } from '../entities/partner-category.entity';
 import { TeamMember } from '../entities/team-member.entity';
 import { Tender } from '../entities/tender.entity';
 import { Career } from '../entities/career.entity';
+import { CareerType } from '../entities/career-type.entity';
 import { Settings } from '../entities/settings.entity';
 import { Application } from '../entities/application.entity';
 import { TenderSubmission } from '../entities/tender-submission.entity';
@@ -30,7 +31,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DB_NAME || 'apc_db',
   synchronize: false, // NEVER use auto-sync in production — use migrations instead
   logging: process.env.NODE_ENV === 'development',
-  entities: [User, Message, MessageSubject, Department, News, NewsCategory, Project, ProjectCategory, Service, Partner, PartnerCategory, TeamMember, Tender, Career, Settings, Application, TenderSubmission, BeneficiaryTestimonial],
+  entities: [User, Message, MessageSubject, Department, News, NewsCategory, Project, ProjectCategory, Service, Partner, PartnerCategory, TeamMember, Tender, Career, CareerType, Settings, Application, TenderSubmission, BeneficiaryTestimonial],
   migrations: [],
   subscribers: [],
 });

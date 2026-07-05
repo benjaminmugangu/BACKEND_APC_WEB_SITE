@@ -1,12 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-
-export enum CareerType {
-  FULL_TIME = 'FULL_TIME',
-  PART_TIME = 'PART_TIME',
-  CONTRACT = 'CONTRACT',
-  INTERNSHIP = 'INTERNSHIP',
-  VOLUNTEER = 'VOLUNTEER'
-}
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { CareerType } from './career-type.entity';
 
 export enum CareerStatus {
   OPEN = 'OPEN',
@@ -37,7 +30,8 @@ export enum CareerStatus {
  *           type: string
  *         type:
  *           type: string
- *           enum: [FULL_TIME, PART_TIME, CONTRACT, INTERNSHIP, VOLUNTEER]
+ *         careerTypeId:
+ *           type: string
  *         status:
  *           type: string
  *           enum: [OPEN, CLOSED, ARCHIVED]
@@ -66,13 +60,15 @@ export class Career {
   @Column('text', { nullable: true })
   requirements!: string;
 
-  @Column({
-    type: 'enum',
-    enum: CareerType,
-    default: CareerType.FULL_TIME,
-    nullable: true
-  })
-  type!: CareerType;
+  @Column({ nullable: true })
+  type?: string;
+
+  @Column({ nullable: true })
+  careerTypeId?: string;
+
+  @ManyToOne(() => CareerType, { onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'careerTypeId' })
+  careerType?: CareerType;
 
   @Column({
     type: 'enum',

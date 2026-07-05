@@ -1,5 +1,5 @@
-import { IsString, IsNotEmpty, IsOptional, IsBoolean, IsDateString, IsEnum } from 'class-validator';
-import { CareerType, CareerStatus } from '@/entities/career.entity';
+import { IsString, IsNotEmpty, IsOptional, IsBoolean, IsDateString, IsEnum, IsUUID } from 'class-validator';
+import { CareerStatus } from '@/entities/career.entity';
 
 export class CreateCareerDto {
   @IsString()
@@ -19,8 +19,12 @@ export class CreateCareerDto {
   requirements?: string;
 
   @IsOptional()
-  @IsEnum(CareerType, { message: 'Type de contrat invalide' })
-  type?: CareerType;
+  @IsString()
+  type?: string;
+
+  @IsOptional()
+  @IsUUID('4', { message: 'ID du type de contrat invalide' })
+  careerTypeId?: string;
 
   @IsOptional()
   @IsEnum(CareerStatus, { message: 'Statut invalide' })
@@ -44,7 +48,8 @@ export class UpdateCareerDto {
   @IsOptional() @IsString() description?: string;
   @IsOptional() @IsString() content?: string;
   @IsOptional() @IsString() requirements?: string;
-  @IsOptional() @IsEnum(CareerType) type?: CareerType;
+  @IsOptional() @IsString() type?: string;
+  @IsOptional() @IsUUID() careerTypeId?: string;
   @IsOptional() @IsEnum(CareerStatus) status?: CareerStatus;
   @IsOptional() @IsString() location?: string;
   @IsOptional() @IsDateString() deadline?: string;
