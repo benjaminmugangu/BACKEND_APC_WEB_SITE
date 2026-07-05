@@ -42,9 +42,15 @@ function executeNext() {
   
   connection.query(query, (err, results) => {
     if (err) {
-      // Si la contrainte existe déjà, mysql renvoie parfois une erreur qu'on peut ignorer ou gérer
-      if (err.code === 'ER_DUP_KEYNAME' || err.code === 'ER_FK_DUP_NAME' || err.message.includes('Duplicate key name') || err.message.includes('already exists')) {
-        console.log(`[INFO] Ignoré (déjà existant) : ${err.message}`);
+      // Si la contrainte ou colonne existe déjà, on l'ignore
+      if (
+        err.code === 'ER_DUP_KEYNAME' || 
+        err.code === 'ER_FK_DUP_NAME' || 
+        err.code === 'ER_CANT_CREATE_TABLE' ||
+        err.message.includes('Duplicate key') || 
+        err.message.includes('already exists')
+      ) {
+        console.log(`[INFO] Ignoré (déjà existant ou déjà configuré) : ${err.message}`);
         queryIndex++;
         executeNext();
         return;
