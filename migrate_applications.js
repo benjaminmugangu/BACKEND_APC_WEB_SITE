@@ -29,7 +29,7 @@ async function migrate() {
     try {
       await connection.query(`
         ALTER TABLE \`applications\` 
-        ADD COLUMN \`careerTypeId\` varchar(36) DEFAULT NULL;
+        ADD COLUMN \`careerTypeId\` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL;
       `);
       console.log("Requête exécutée avec succès.");
     } catch (e) {

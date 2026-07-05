@@ -44,7 +44,7 @@ export class ApplicationService {
       lastName: data.lastName,
       email: data.email,
       phone: data.phone,
-      type: data.type,
+      type: data.type || "Non précisé",
       careerTitle,
     });
 
