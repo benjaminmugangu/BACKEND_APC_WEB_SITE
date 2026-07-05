@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne } from 'typeorm';
 import { Career } from './career.entity';
+import { CareerType } from './career-type.entity';
 
 export enum ApplicationStatus {
   PENDING = 'pending',
@@ -25,12 +26,14 @@ export class Application {
   @Column({ nullable: true })
   phone!: string;
 
-  @Column({
-    type: 'enum',
-    enum: ['volunteer', 'internship', 'job', 'consultant'],
-    default: 'job'
-  })
+  @Column({ type: 'varchar', nullable: true })
   type!: string;
+
+  @ManyToOne(() => CareerType, { nullable: true, onDelete: 'SET NULL' })
+  careerType!: CareerType;
+
+  @Column({ nullable: true })
+  careerTypeId!: string;
 
   @Column('text', { nullable: true })
   motivation!: string;

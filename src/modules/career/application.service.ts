@@ -29,6 +29,7 @@ export class ApplicationService {
       email: data.email,
       phone: data.phone,
       type: data.type,
+      careerTypeId: data.careerTypeId,
       motivation: data.motivation,
       careerId: data.careerId,
       cvUrl,
@@ -52,7 +53,7 @@ export class ApplicationService {
 
   async findAll() {
     return await this.repository.find({
-      relations: ['career'],
+      relations: ['career', 'careerType'],
       order: { createdAt: 'DESC' }
     });
   }
@@ -60,7 +61,7 @@ export class ApplicationService {
   async findOne(id: string) {
     const application = await this.repository.findOne({
       where: { id },
-      relations: ['career']
+      relations: ['career', 'careerType']
     });
     if (!application) {
       throw new NotFoundError('Candidature introuvable');

@@ -18,8 +18,12 @@ export class CreateApplicationDto {
   phone?: string;
 
   @IsString()
-  @IsNotEmpty()
-  type!: string; // volunteer, internship, job, consultant
+  @IsOptional()
+  type?: string;
+
+  @IsUUID('4')
+  @IsOptional()
+  careerTypeId?: string;
 
   @IsString()
   @IsOptional()
