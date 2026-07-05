@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Department } from './department.entity';
 
 export enum MemberStatus {
   ACTIVE = 'active',
@@ -60,6 +61,13 @@ export class TeamMember {
 
   @Column({ default: 'Programmes' })
   department!: string;
+
+  @Column({ nullable: true })
+  departmentId!: string | null;
+
+  @ManyToOne(() => Department, { nullable: true, onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'departmentId' })
+  departmentRelation?: Department | null;
 
   @Column({ nullable: true })
   email!: string;

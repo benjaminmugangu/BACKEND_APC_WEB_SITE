@@ -15,6 +15,10 @@ export class CreateTeamMemberDto {
   department?: string;
 
   @IsOptional()
+  @IsString()
+  departmentId?: string;
+
+  @IsOptional()
   @IsEmail({}, { message: 'Adresse email invalide' })
   email?: string;
 
@@ -75,6 +79,7 @@ export class UpdateTeamMemberDto {
   @IsOptional() @IsString() name?: string;
   @IsOptional() @IsString() role?: string;
   @IsOptional() @IsString() department?: string;
+  @IsOptional() @IsString() departmentId?: string;
   @IsOptional() @IsEmail({}, { message: 'Adresse email invalide' }) email?: string;
   @IsOptional() @IsString() phone?: string;
   @IsOptional() @IsEnum(MemberAccess) access?: MemberAccess;
