@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsOptional, IsBoolean, IsNumber, IsArray, IsObject, IsUrl, MaxLength, ValidateIf } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, IsBoolean, IsNumber, IsArray, IsObject, IsUrl, MaxLength, ValidateIf, Matches } from 'class-validator';
 
 export class CreateServiceDto {
   @IsString()
@@ -31,13 +31,8 @@ export class CreateServiceDto {
 
   @IsOptional()
   @IsString()
-  @MaxLength(50)
-  bgClass?: string;
-
-  @IsOptional()
-  @IsString()
-  @MaxLength(50)
-  accentClass?: string;
+  @Matches(/^#[0-9A-Fa-f]{6}$/, { message: 'colorHex must be a valid hex color like #10b981' })
+  colorHex?: string;
 
   @IsOptional()
   @ValidateIf(o => o.mainImage !== '' && o.mainImage !== null && o.mainImage !== undefined)
@@ -70,8 +65,7 @@ export class UpdateServiceDto {
   @IsOptional() @IsString() description?: string;
   @IsOptional() @IsString() descriptionEn?: string;
   @IsOptional() @IsString() @MaxLength(50) iconName?: string;
-  @IsOptional() @IsString() @MaxLength(50) bgClass?: string;
-  @IsOptional() @IsString() @MaxLength(50) accentClass?: string;
+  @IsOptional() @IsString() @Matches(/^#[0-9A-Fa-f]{6}$/) colorHex?: string;
   @IsOptional()
   @ValidateIf(o => o.mainImage !== '' && o.mainImage !== null && o.mainImage !== undefined)
   @IsUrl()

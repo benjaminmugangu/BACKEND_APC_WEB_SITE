@@ -22,9 +22,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
  *           type: string
  *         iconName:
  *           type: string
- *         bgClass:
- *           type: string
- *         accentClass:
+ *         colorHex:
  *           type: string
  *         mainImage:
  *           type: string
@@ -54,11 +52,8 @@ export class Service {
   @Column({ type: 'varchar', length: 100, nullable: true })
   iconName!: string;
 
-  @Column({ type: 'varchar', length: 100, default: 'bg-emerald-500' })
-  bgClass!: string;
-
-  @Column({ type: 'varchar', length: 100, default: 'text-emerald-700' })
-  accentClass!: string;
+  @Column({ type: 'varchar', length: 7, default: '#1a472a' })
+  colorHex!: string;
 
   @Column('text', { nullable: true })
   mainImage!: string;
