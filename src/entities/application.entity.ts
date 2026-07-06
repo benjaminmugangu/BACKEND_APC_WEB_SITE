@@ -32,7 +32,7 @@ export class Application {
   @ManyToOne(() => CareerType, { nullable: true, onDelete: 'SET NULL' })
   careerType!: CareerType;
 
-  @Column({ nullable: true })
+  @Column('varchar', { length: 36, nullable: true })
   careerTypeId!: string;
 
   @Column('text', { nullable: true })
@@ -51,7 +51,7 @@ export class Application {
   @ManyToOne(() => Career, { nullable: true, onDelete: 'SET NULL' })
   career!: Career;
 
-  @Column({ nullable: true })
+  @Column('varchar', { length: 36, nullable: true })
   careerId!: string;
 
   @CreateDateColumn()

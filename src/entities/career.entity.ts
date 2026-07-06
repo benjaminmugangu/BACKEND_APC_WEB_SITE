@@ -63,7 +63,7 @@ export class Career {
   @Column({ nullable: true })
   type?: string;
 
-  @Column({ nullable: true })
+  @Column('varchar', { length: 36, nullable: true })
   careerTypeId?: string;
 
   @ManyToOne(() => CareerType, { onDelete: 'SET NULL' })
