@@ -139,4 +139,24 @@ export class UpdateSettingsDto {
   @ValidateNested()
   @Type(() => LogoSettingsDto)
   logo?: LogoSettingsDto;
+
+  @IsObject()
+  @IsOptional()
+  supportSection?: any;
+
+  @IsObject()
+  @IsOptional()
+  historySection?: any;
+
+  @IsObject()
+  @IsOptional()
+  engagementSection?: any;
+
+  @IsString()
+  @IsOptional()
+  donationMessage?: string;
+
+  @IsObject()
+  @IsOptional()
+  transparencyMessage?: any;
 }
