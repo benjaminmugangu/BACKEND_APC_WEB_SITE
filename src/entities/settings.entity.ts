@@ -245,7 +245,7 @@ export class Settings {
     favicon?: string;
   };
 
-  @Column('json', { nullable: true })
+  @Column('simple-json', { nullable: true })
   supportSection!: {
     title: string;
     subtitle: string;
@@ -254,7 +254,7 @@ export class Settings {
     bulletPoints: string[];
   };
 
-  @Column('json', { nullable: true })
+  @Column('simple-json', { nullable: true })
   historySection!: {
     title: string;
     subtitle: string;
@@ -263,7 +263,7 @@ export class Settings {
     objectives: { label: string; icon: string; color: string; bg: string }[];
   };
 
-  @Column('json', { nullable: true })
+  @Column('simple-json', { nullable: true })
   engagementSection!: {
     title: string;
     subtitle: string;
@@ -275,7 +275,7 @@ export class Settings {
   @Column('text', { nullable: true })
   donationMessage!: string;
 
-  @Column('json', { nullable: true })
+  @Column('simple-json', { nullable: true })
   transparencyMessage!: {
     title: string;
     description: string;
