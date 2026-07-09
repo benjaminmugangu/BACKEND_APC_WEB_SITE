@@ -113,22 +113,23 @@ export class SettingsService {
     } else {
       let modified = false;
       
-      if (!settings.hero || !settings.hero.title) {
+      if (!settings.hero || settings.hero.title == null) {
         settings.hero = { ...defaults.hero, ...settings.hero };
         modified = true;
       }
       
-      if (!settings.stats || !settings.stats.partners) {
+      if (!settings.stats || settings.stats.partners == null) {
         settings.stats = { ...defaults.stats, ...settings.stats };
         modified = true;
       }
       
-      if (!settings.contact || !settings.contact.phone1) {
+      if (!settings.contact || settings.contact.phone1 == null) {
         const oldPhone = (settings.contact as any)?.phone || '';
         settings.contact = { 
           ...defaults.contact, 
           ...settings.contact,
-          phone1: oldPhone || defaults.contact.phone1
+          phone1: settings.contact.phone1 || oldPhone,
+          phone2: settings.contact.phone2 || ''
         };
         modified = true;
       }
@@ -143,7 +144,7 @@ export class SettingsService {
         modified = true;
       }
       
-      if (!settings.logo || !settings.logo.logoHeader) {
+      if (!settings.logo || settings.logo.logoHeader == null) {
         settings.logo = defaults.logo;
         modified = true;
       }

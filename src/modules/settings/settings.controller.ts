@@ -7,6 +7,12 @@ export class SettingsController {
 
   getSettings = async (req: Request, res: Response, next: NextFunction) => {
     try {
+      // Désactiver le cache pour garantir que l'interface admin récupère toujours les données fraîches
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+      res.setHeader('Surrogate-Control', 'no-store');
+      
       const result = await this.service.getSettings();
       return ResponseUtil.success(res, 'Paramètres récupérés avec succès', result);
     } catch (error) {
