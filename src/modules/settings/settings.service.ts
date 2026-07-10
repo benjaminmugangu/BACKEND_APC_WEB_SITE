@@ -128,8 +128,8 @@ export class SettingsService {
         settings.contact = { 
           ...defaults.contact, 
           ...settings.contact,
-          phone1: settings.contact.phone1 || oldPhone,
-          phone2: settings.contact.phone2 || ''
+          phone1: settings.contact?.phone1 || oldPhone,
+          phone2: settings.contact?.phone2 || ''
         };
         modified = true;
       }
