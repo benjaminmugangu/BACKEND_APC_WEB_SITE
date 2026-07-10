@@ -104,6 +104,65 @@ export class SettingsService {
       transparencyMessage: {
         title: "Engagement Transparence",
         description: "Agri-Peace and Child s'engage à fournir un reçu officiel pour chaque don reçu. Vos fonds sont directement alloués aux projets terrain de votre choix ou à nos programmes prioritaires en cours."
+      },
+      legalSection: {
+        privacyPolicy: `<div className="flex items-center gap-3 mb-8 p-4 bg-apc-blue/5 rounded-2xl border border-apc-blue/10">
+              <ShieldCheck className="text-apc-blue" size={32} />
+              <p className="text-sm font-medium text-apc-blue m-0">Dernière mise à jour : Avril 2024</p>
+            </div>
+            
+            <h2 className="text-2xl font-bold mb-4">1. Collecte des informations</h2>
+            <p className="mb-6">
+              Nous recueillons des informations lorsque vous utilisez notre formulaire de contact ou lorsque vous faites un don. Les informations recueillies incluent votre nom, votre adresse e-mail et votre numéro de téléphone.
+            </p>
+
+            <h2 className="text-2xl font-bold mb-4">2. Utilisation des informations</h2>
+            <p className="mb-6">
+              Toutes les informations que nous recueillons auprès de vous peuvent être utilisées pour :
+              <ul className="list-disc pl-6 mt-2">
+                <li>Personnaliser votre expérience et répondre à vos besoins individuels</li>
+                <li>Améliorer notre site Web</li>
+                <li>Améliorer le service client et vos besoins de prise en charge</li>
+                <li>Vous contacter par e-mail</li>
+              </ul>
+            </p>
+
+            <h2 className="text-2xl font-bold mb-4">3. Confidentialité du commerce en ligne</h2>
+            <p className="mb-6">
+              Nous sommes les seuls propriétaires des informations recueillies sur ce site. Vos informations personnelles ne seront pas vendues, échangées, transférées, ou données à une autre société pour n&apos;importe quelle raison, sans votre consentement.
+            </p>
+
+            <h2 className="text-2xl font-bold mb-4">4. Protection des informations</h2>
+            <p className="mb-6">
+              Nous mettons en œuvre une variété de mesures de sécurité pour préserver la sécurité de vos informations personnelles. Nous utilisons un cryptage à la pointe de la technologie pour protéger les informations sensibles transmises en ligne.
+            </p>`,
+        legalNotices: `<div className="flex items-center gap-3 mb-8 p-4 bg-gray-50 rounded-2xl border border-gray-100">
+              <FileText className="text-gray-400" size={32} />
+              <p className="text-sm font-medium text-gray-500 m-0">Conformité aux lois de la République Démocratique du Congo.</p>
+            </div>
+            
+            <h2 className="text-2xl font-bold mb-4">1. Présentation de l&apos;Organisation</h2>
+            <p className="mb-6">
+              Le site web est édité par l&apos;ONG <strong>{institution?.name || 'Agri-Peace and Child'}</strong> ({institution?.acronym || 'APC'}).<br />
+              <strong>Siège social :</strong> {contact?.address || 'Goma, Nord-Kivu, RD Congo'}<br />
+              <strong>Téléphone :</strong> {contact?.phone1 || ''}<br />
+              <strong>Email :</strong> {contact?.email || ''}
+            </p>
+
+            <h2 className="text-2xl font-bold mb-4">2. Hébergement</h2>
+            <p className="mb-6">
+              Le site est hébergé par Vercel Inc., situé au 340 S Lemon Ave #4133 Walnut, CA 91789, USA.
+            </p>
+
+            <h2 className="text-2xl font-bold mb-4">3. Propriété Intellectuelle</h2>
+            <p className="mb-6">
+              L&apos;ensemble de ce site relève de la législation congolaise et internationale sur le droit d&apos;auteur et la propriété intellectuelle. Tous les droits de reproduction sont réservés, y compris pour les documents téléchargeables et les représentations iconographiques et photographiques.
+            </p>
+
+            <h2 className="text-2xl font-bold mb-4">4. Limitation de Responsabilité</h2>
+            <p className="mb-6">
+              {institution?.name || 'Agri-Peace and Child'} s&apos;efforce d&apos;assurer au mieux de ses possibilités l&apos;exactitude et la mise à jour des informations diffusées sur ce site. Toutefois, l&apos;organisation ne peut garantir l&apos;exactitude, la précision ou l&apos;exhaustivité des informations mises à la disposition sur ce site.
+            </p>`
       }
     };
 
@@ -161,6 +220,11 @@ export class SettingsService {
 
       if (!settings.engagementSection) {
         settings.engagementSection = defaults.engagementSection;
+        modified = true;
+      }
+
+      if (!settings.legalSection) {
+        settings.legalSection = defaults.legalSection;
         modified = true;
       }
 
@@ -223,6 +287,9 @@ export class SettingsService {
     }
     if (data.transparencyMessage) {
       settings.transparencyMessage = { ...settings.transparencyMessage, ...data.transparencyMessage };
+    }
+    if (data.legalSection) {
+      settings.legalSection = { ...settings.legalSection, ...data.legalSection };
     }
 
     return await this.repository.save(settings);

@@ -180,6 +180,13 @@ import { Entity, PrimaryGeneratedColumn, Column, UpdateDateColumn } from 'typeor
  *               type: string
  *             description:
  *               type: string
+ *         legalSection:
+ *           type: object
+ *           properties:
+ *             privacyPolicy:
+ *               type: string
+ *             legalNotices:
+ *               type: string
  */
 @Entity('settings')
 export class Settings {
@@ -279,6 +286,12 @@ export class Settings {
   transparencyMessage!: {
     title: string;
     description: string;
+  };
+
+  @Column('simple-json', { nullable: true })
+  legalSection!: {
+    privacyPolicy: string;
+    legalNotices: string;
   };
 
   @UpdateDateColumn()
