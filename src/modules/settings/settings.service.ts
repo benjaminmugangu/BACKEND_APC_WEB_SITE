@@ -149,13 +149,13 @@ export class SettingsService {
         modified = true;
       }
 
-      if (!settings.supportSection) {
-        settings.supportSection = defaults.supportSection;
+      if (!settings.supportSection || settings.supportSection.imageUrl == null) {
+        settings.supportSection = { ...defaults.supportSection, ...settings.supportSection };
         modified = true;
       }
 
-      if (!settings.historySection) {
-        settings.historySection = defaults.historySection;
+      if (!settings.historySection || settings.historySection.imageUrl == null) {
+        settings.historySection = { ...defaults.historySection, ...settings.historySection };
         modified = true;
       }
 
