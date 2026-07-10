@@ -1,0 +1,111 @@
+import { AppDataSource } from '@/config/database.config';
+import { Project, ProjectStatus } from '@/entities/project.entity';
+import { NotFoundError, ConflictError } from '@/common/utils/error.util';
+import { PaginationUtil } from '@/common/utils/pagination.util';
+import { In } from 'typeorm';
+export class ProjectService {
+    repository = AppDataSource.getRepository(Project);
+    async create(data) {
+        const existing = await this.repository.findOneBy({ slug: data.slug });
+        if (existing) {
+            throw new ConflictError('Un projet avec ce slug existe déjà');
+        }
+        const project = this.repository.create(data);
+        return await this.repository.save(project);
+    }
+    async findAll(query) {
+        const page = query.page || 1;
+        const limit = query.limit || 10;
+        const qb = this.repository.createQueryBuilder('project')
+            .leftJoinAndSelect('project.category', 'category');
+        if (!query.adminMode) {
+            // Visiteurs publics : seulement les projets publiés et visibles
+            qb.where('project.isVisible = :visible', { visible: true });
+            qb.andWhere('project.status = :status', { status: ProjectStatus.PUBLISHED });
+        }
+        else {
+            // Admins : tous les statuts, sauf si un filtre spécifique est demandé
+            // On ignore 'all' car c'est la valeur "aucun filtre" côté frontend
+            if (query.status && query.status !== 'all') {
+                qb.andWhere('project.status = :status', { status: query.status });
+            }
+        }
+        if (query.category) {
+            qb.andWhere('project.categoryId = :category', { category: query.category });
+        }
+        if (query.search) {
+            qb.andWhere('(project.title LIKE :search OR project.description LIKE :search)', {
+                search: `%${query.search}%`
+            });
+        }
+        qb.orderBy('project.createdAt', 'DESC')
+            .skip((page - 1) * limit)
+            .take(limit);
+        const [items, total] = await qb.getManyAndCount();
+        return {
+            items,
+            meta: PaginationUtil.getMeta(total, page, limit)
+        };
+    }
+    async findOne(id) {
+        const project = await this.repository.findOne({ where: { id }, relations: ['category'] });
+        if (!project) {
+            throw new NotFoundError('Projet introuvable');
+        }
+        return project;
+    }
+    async findBySlug(slug, adminMode = false) {
+        const query = { slug };
+        if (!adminMode) {
+            query.isVisible = true;
+            query.status = ProjectStatus.PUBLISHED;
+        }
+        const project = await this.repository.findOne({ where: query, relations: ['category'] });
+        if (!project) {
+            throw new NotFoundError('Projet introuvable');
+        }
+        return project;
+    }
+    async update(id, data) {
+        const project = await this.findOne(id);
+        if (data.slug && data.slug !== project.slug) {
+            const existing = await this.repository.findOneBy({ slug: data.slug });
+            if (existing) {
+                throw new ConflictError('Un projet avec ce slug existe déjà');
+            }
+        }
+        Object.assign(project, data);
+        return await this.repository.save(project);
+    }
+    async remove(id) {
+        const project = await this.findOne(id);
+        await this.repository.remove(project);
+        return true;
+    }
+    async duplicate(id) {
+        const original = await this.findOne(id);
+        const copy = this.repository.create({
+            ...original,
+            id: undefined,
+            title: `${original.title} (Copie)`,
+            slug: `${original.slug}-copy-${Date.now()}`,
+            status: ProjectStatus.DRAFT,
+            createdAt: undefined,
+            updatedAt: undefined
+        });
+        return await this.repository.save(copy);
+    }
+    async setStatus(id, status) {
+        const project = await this.findOne(id);
+        project.status = status;
+        return await this.repository.save(project);
+    }
+    async bulkDelete(ids) {
+        await this.repository.delete({ id: In(ids) });
+        return true;
+    }
+    async bulkSetStatus(ids, status) {
+        await this.repository.update({ id: In(ids) }, { status });
+        return true;
+    }
+}

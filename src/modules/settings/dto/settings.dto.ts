@@ -103,6 +103,11 @@ class LogoSettingsDto {
   @IsString() @IsOptional() favicon?: string;
 }
 
+class LegalSectionDto {
+  @IsString() @IsOptional() privacyPolicy?: string;
+  @IsString() @IsOptional() legalNotices?: string;
+}
+
 export class UpdateSettingsDto {
   @IsObject()
   @IsOptional()
@@ -159,4 +164,10 @@ export class UpdateSettingsDto {
   @IsObject()
   @IsOptional()
   transparencyMessage?: any;
+
+  @IsObject()
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => LegalSectionDto)
+  legalSection?: LegalSectionDto;
 }
