@@ -60,7 +60,7 @@ export class SettingsService {
         title: "Chaque action compte dans la reconstruction de notre communauté.",
         subtitle: "Pourquoi nous soutenir ?",
         description: "Depuis notre création, nous avons constaté que l'engagement local couplé au soutien international crée une force imparable. En nous soutenant, vous ne donnez pas seulement, vous investissez dans l'autonomie et la dignité de milliers de familles.",
-        imageUrl: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=2070&auto=format&fit=crop",
+        imageUrl: "",
         bulletPoints: [
           "Transparence totale des fonds",
           "Impact direct sur le terrain (sans intermédiaire)",
@@ -75,7 +75,7 @@ export class SettingsService {
           "Face aux crises récurrentes qui frappent l'Est de la RDC, nos fondateurs ont décidé d'agir localement avec une approche intégrée conjuguant agriculture durable, protection sociale et consolidation de la paix.",
           "Aujourd'hui, nous intervenons dans plusieurs provinces de l'Est, touchant plus de 45 000 bénéficiaires directs."
         ],
-        imageUrl: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=2070&auto=format&fit=crop",
+        imageUrl: "",
         objectives: [
           { label: "Promouvoir l'agriculture durable et la sécurité alimentaire", icon: "Sprout", color: "text-apc-green", bg: "bg-apc-green/10" },
           { label: "Consolider la paix et la cohésion sociale", icon: "Handshake", color: "text-apc-blue", bg: "bg-apc-blue/10" },
