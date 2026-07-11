@@ -51,10 +51,10 @@ export class SettingsService {
         ogImage: ""
       },
       logo: {
-        logoHeader: "https://res.cloudinary.com/ddxgabibh/image/upload/v1779170149/apc-website/apc_logo_branding.png",
-        logoFooter: "https://res.cloudinary.com/ddxgabibh/image/upload/v1779170149/apc-website/apc_logo_branding.png",
-        logoDark: "https://res.cloudinary.com/ddxgabibh/image/upload/v1779170149/apc-website/apc_logo_branding.png",
-        favicon: "https://res.cloudinary.com/ddxgabibh/image/upload/v1779170149/apc-website/apc_logo_branding.png"
+        logoHeader: "https://res.cloudinary.com/ddxgabibh/image/upload/v1783256326/apc-website/dzhctidnsxtrnucfde2z.png",
+        logoFooter: "https://res.cloudinary.com/ddxgabibh/image/upload/v1783256326/apc-website/dzhctidnsxtrnucfde2z.png",
+        logoDark: "https://res.cloudinary.com/ddxgabibh/image/upload/v1783256326/apc-website/dzhctidnsxtrnucfde2z.png",
+        favicon: "https://res.cloudinary.com/ddxgabibh/image/upload/v1783256326/apc-website/dzhctidnsxtrnucfde2z.png"
       },
       supportSection: {
         title: "Chaque action compte dans la reconstruction de notre communauté.",
