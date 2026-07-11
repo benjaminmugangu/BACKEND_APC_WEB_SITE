@@ -172,9 +172,23 @@ export class SettingsService {
     } else {
       let modified = false;
       
-      if (!settings.hero || settings.hero.title == null) {
-        settings.hero = { ...defaults.hero, ...settings.hero };
+      if (!settings.hero) {
+        settings.hero = defaults.hero;
         modified = true;
+      } else {
+        // Ne fusionner que les champs manquants, ne pas écraser les valeurs existantes
+        if (!settings.hero.title) {
+          settings.hero.title = defaults.hero.title;
+          modified = true;
+        }
+        if (!settings.hero.subtitle) {
+          settings.hero.subtitle = defaults.hero.subtitle;
+          modified = true;
+        }
+        if (!settings.hero.imageUrl) {
+          settings.hero.imageUrl = defaults.hero.imageUrl;
+          modified = true;
+        }
       }
       
       if (!settings.stats || settings.stats.partners == null) {
@@ -203,9 +217,27 @@ export class SettingsService {
         modified = true;
       }
       
-      if (!settings.logo || settings.logo.logoHeader == null) {
+      if (!settings.logo) {
         settings.logo = defaults.logo;
         modified = true;
+      } else {
+        // Ne fusionner que les champs manquants, ne pas écraser les valeurs existantes
+        if (!settings.logo.logoHeader) {
+          settings.logo.logoHeader = defaults.logo.logoHeader;
+          modified = true;
+        }
+        if (!settings.logo.logoFooter) {
+          settings.logo.logoFooter = defaults.logo.logoFooter;
+          modified = true;
+        }
+        if (!settings.logo.logoDark) {
+          settings.logo.logoDark = defaults.logo.logoDark;
+          modified = true;
+        }
+        if (!settings.logo.favicon) {
+          settings.logo.favicon = defaults.logo.favicon;
+          modified = true;
+        }
       }
 
       if (!settings.supportSection || settings.supportSection.imageUrl == null) {
